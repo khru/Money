@@ -1,0 +1,8 @@
+*.sublime-*
+.cache
+.php_cs.cache
+vendor
+.env
+Makefile
+.idea/
+build/
