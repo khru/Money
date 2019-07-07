@@ -198,7 +198,8 @@ final class Number
 
     public function equal(self $number): bool
     {
-        return $this->integerPart === $number->getIntegerPart() && $this->fractionalPart;
+        return $this->integerPart === $number->getIntegerPart() &&
+            $this->fractionalPart === $number->getFractionalPart();
     }
 
     private function preconditionNotNullArguments(string $integerPart, string $fractionalPart)
