@@ -1,8 +1,8 @@
 <?php
 
-namespace WeDev\Price\Domain;
+declare(strict_types=1);
 
-use WeDev\Price\Domain\PriceAble;
+namespace WeDev\Price\Domain;
 
 class NumericPrice implements PriceAble
 {
@@ -29,5 +29,4 @@ class NumericPrice implements PriceAble
     {
         return new static($integer, $decimal);
     }
-
 }

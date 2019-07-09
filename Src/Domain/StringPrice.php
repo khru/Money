@@ -1,10 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace WeDev\Price\Domain;
-
-
-use WeDev\Price\Domain\PriceAble;
 
 class StringPrice implements PriceAble
 {
