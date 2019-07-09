@@ -4,7 +4,7 @@
 namespace WeDev\Price\Domain;
 
 
-use WeDev\Price\PriceAble;
+use WeDev\Price\Domain\PriceAble;
 
 class StringPrice implements PriceAble
 {

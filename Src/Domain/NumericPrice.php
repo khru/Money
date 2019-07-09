@@ -2,7 +2,7 @@
 
 namespace WeDev\Price\Domain;
 
-use WeDev\Price\PriceAble;
+use WeDev\Price\Domain\PriceAble;
 
 class NumericPrice implements PriceAble
 {

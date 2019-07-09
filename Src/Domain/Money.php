@@ -7,8 +7,8 @@ namespace WeDev\Price\Domain;
 class Money
 {
 
-    public function __construct(Nume)
+    /*public function __construct(Nume)
     {
-    }
+    }*/
 
 }

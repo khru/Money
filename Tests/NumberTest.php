@@ -23,14 +23,107 @@ class NumberTest extends TestCase
     private const AN_OTHER_NEGATIVE_DECIMAL_NUMBER_STRING = '-0.5';
     private const A_POSITIVE_INTEGER_STRING = '1';
     private const A_NEGATIVE_INTEGER_STRING = '-1';
-    private const A_POSITIVE_DECIMAL_NUMBER_TAILING_ZEROS_STRING = "1.500000";
-    private const A_NEGATIVE_DECIMAL_NUMBER_TAILING_ZEROS_STRING = "-1.500000";
-    private const AN_OTHER_POSITIVE_DECIMAL_NUMBER_TAILING_ZEROS_STRING = "0.50000";
-    private const AN_OTHER_NEGATIVE_DECIMAL_NUMBER_TAILING_ZEROS_STRING = "-0.50000";
+    private const A_POSITIVE_DECIMAL_NUMBER_TAILING_ZEROS_STRING = '1.500000';
+    private const A_NEGATIVE_DECIMAL_NUMBER_TAILING_ZEROS_STRING = '-1.500000';
+    private const AN_OTHER_POSITIVE_DECIMAL_NUMBER_TAILING_ZEROS_STRING = '0.50000';
+    private const AN_OTHER_NEGATIVE_DECIMAL_NUMBER_TAILING_ZEROS_STRING = '-0.50000';
+    private const EMPTY_STRING = '';
+    private const EMPTY_STRING_WITH_SPACES = '          ';
+    private const A_BAD_FORMATTED_NUMBER_ARRAY = '1,56543.1';
+    private const AN_OTHER_BAD_FORMATTED_NUMBER_WITH_TWO_POINTS_STRING = '1.56543.1';
+    private const OTHER_BAD_FORMATTED_NUMBER_STRING = '1.56543,1';
+    private const OTHER_BAD_FORMATTED_NUMBER_WITH_TWO_COMMAS_STRING = '1,56543,1';
+
+    private const EMPTY_ARRAY = [];
+
+    //**************************
+    // Number preconditions
+    // *************************
+
+    /**
+     * @test
+     */
+    public function TypeErrorForNamedConstructorFloat()
+    {
+        $this->expectException(\TypeError::class);
+        Number::fromFloat(null);
+    }
+
+    /**
+     * @test
+     */
+    public function TypeErrorForNamedConstructorString()
+    {
+        $this->expectException(\TypeError::class);
+        Number::fromString(null);
+    }
+
+    /**
+     * @test
+     */
+    public function TypeErrorForNamedConstructorNumber()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        Number::fromNumber(null);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldThrowInvalidArgumentExceptionOnEmptyString()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        Number::fromString(self::EMPTY_STRING);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldThrowTypeErrorOnEmptyArray()
+    {
+        $this->expectException(\TypeError::class);
+        Number::fromString(self::EMPTY_ARRAY);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldThrowInvalidArgumentExceptionOnFromBadFormatedNumberString()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        Number::fromString(self::A_BAD_FORMATTED_NUMBER_ARRAY);
+    }
+
+    /**
+     * @test
+     */
+    public function xxx()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        Number::fromString(self::AN_OTHER_BAD_FORMATTED_NUMBER_WITH_TWO_POINTS_STRING);
+    }
+
+    /**
+     * @test
+     */
+    public function xxx1()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        Number::fromString('1.56543,1');
+    }
 
     //**************************
     // Number from string
     // *************************
+
+    /**
+     * @test
+     */
+    public function shouldThrowInvalidArgumentExceptionOnEmptyStringWithSpaces()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        Number::fromString(self::EMPTY_STRING_WITH_SPACES);
+    }
 
     /**
      * @test
@@ -93,6 +186,26 @@ class NumberTest extends TestCase
     {
         $number = Number::fromString(self::A_POSITIVE_DECIMAL_NUMBER_TAILING_ZEROS_STRING);
         $this->assertTrue(self::A_POSITIVE_DECIMAL_NUMBER_STRING === $number->__toString());
+    }
+
+    /**
+     * @test
+     */
+    public function shouldCompareTwoStringFloatsAsEquals()
+    {
+        $number_a = Number::fromString(self::A_POSITIVE_DECIMAL_NUMBER_STRING);
+        $number_b = Number::fromString(self::A_POSITIVE_DECIMAL_NUMBER_STRING);
+        $this->assertTrue($number_a->toFloat() === $number_b->toFloat());
+    }
+
+    /**
+     * @test
+     */
+    public function shouldCompareTowStringFloatOneWithTailingZerosAsEquals()
+    {
+        $number_a = Number::fromFloat(self::A_POSITIVE_DECIMAL_NUMBER_TAILING_ZEROS_STRING);
+        $number_b = Number::fromFloat(self::A_POSITIVE_DECIMAL_NUMBER_STRING);
+        $this->assertTrue($number_a->toFloat() === $number_b->toFloat());
     }
 
     //**************************
@@ -160,5 +273,69 @@ class NumberTest extends TestCase
     {
         $number = Number::fromFloat(self::A_NEGATIVE_INTEGER);
         $this->assertTrue(self::A_NEGATIVE_INTEGER_STRING === $number->__toString());
+    }
+
+    /**
+     * @test
+     */
+    public function shouldCompareTwoFloatAsEquals()
+    {
+        $number_a = Number::fromFloat(self::A_POSITIVE_DECIMAL_NUMBER);
+        $number_b = Number::fromFloat(self::A_POSITIVE_DECIMAL_NUMBER);
+        $this->assertTrue($number_a->toFloat() === $number_b->toFloat());
+    }
+
+    /**
+     * @test
+     */
+    public function shouldCompareTwoFloatOneWithTailingZerosAsEquals()
+    {
+        $number_a = Number::fromFloat(self::A_POSITIVE_DECIMAL_NUMBER_TAILING_ZEROS);
+        $number_b = Number::fromFloat(self::A_POSITIVE_DECIMAL_NUMBER);
+        $this->assertTrue($number_a->toFloat() === $number_b->toFloat());
+    }
+
+    //**************************
+    // Number functions
+    // *************************
+
+    /**
+     * @test
+     */
+    public function shouldBeEqualsComparingTwoEqualAndPositiveFloats()
+    {
+        $number_a = Number::fromFloat(self::AN_OTHER_POSITIVE_DECIMAL_NUMBER);
+        $number_b = Number::fromFloat(self::A_POSITIVE_DECIMAL_NUMBER);
+        $this->assertFalse($number_a->equal($number_b));
+    }
+
+    /**
+     * @test
+     */
+    public function shouldNotBeEqualsComparingTwoDifferentAndPositiveFloats()
+    {
+        $number_a = Number::fromFloat(self::A_POSITIVE_DECIMAL_NUMBER);
+        $number_b = Number::fromFloat(self::A_POSITIVE_DECIMAL_NUMBER);
+        $this->assertTrue($number_a->equal($number_b));
+    }
+
+    /**
+     * @test
+     */
+    public function shouldBeEqualsComparingTwoEqualAndPositiveFloatsWithNumberConstructor()
+    {
+        $number_a = Number::fromNumber(self::A_POSITIVE_DECIMAL_NUMBER);
+        $number_b = Number::fromNumber(self::A_POSITIVE_DECIMAL_NUMBER);
+        $this->assertTrue($number_a->equal($number_b));
+    }
+
+    /**
+     * @test
+     */
+    public function shouldBeEqualsComaringTwoEqualFloatsWithStringConstructor()
+    {
+        $number_a = Number::fromString(self::A_POSITIVE_DECIMAL_NUMBER_STRING);
+        $number_b = Number::fromString(self::A_POSITIVE_DECIMAL_NUMBER_STRING);
+        $this->assertTrue($number_a->equal($number_b));
     }
 }

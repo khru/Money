@@ -1,6 +1,6 @@
 <?php
 
-namespace WeDev\Price;
+namespace WeDev\Price\Domain;
 
 interface PriceAble
 {

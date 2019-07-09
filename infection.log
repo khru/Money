@@ -1,0 +1,2598 @@
+Escaped mutants:
+================
+
+
+1) /home/evalverde/projects/Price/Src/Domain/Number.php:24    [M] CastString
+
+--- Original
++++ New
+@@ @@
+     private function __construct(string $integerPart, string $fractionalPart = '')
+     {
+         $this->preconditionNotNullArguments($integerPart, $fractionalPart);
+-        $this->integerPart = $this->parseIntegerPart((string) $integerPart);
++        $this->integerPart = $this->parseIntegerPart($integerPart);
+         $this->fractionalPart = $this->parseFractionalPart((string) $fractionalPart);
+     }
+     public static function fromString($number) : self
+
+
+2) /home/evalverde/projects/Price/Src/Domain/Number.php:25    [M] CastString
+
+--- Original
++++ New
+@@ @@
+     {
+         $this->preconditionNotNullArguments($integerPart, $fractionalPart);
+         $this->integerPart = $this->parseIntegerPart((string) $integerPart);
+-        $this->fractionalPart = $this->parseFractionalPart((string) $fractionalPart);
++        $this->fractionalPart = $this->parseFractionalPart($fractionalPart);
+     }
+     public static function fromString($number) : self
+     {
+
+
+3) /home/evalverde/projects/Price/Src/Domain/Number.php:119    [M] NotIdentical
+
+--- Original
++++ New
+@@ @@
+     }
+     public function toFloat() : float
+     {
+-        return (float) (self::EMPTY_STRING !== $this->fractionalPart) ? $this->integerPart . $this->fractionalPart : $this->integerPart;
++        return (float) (self::EMPTY_STRING === $this->fractionalPart) ? $this->integerPart . $this->fractionalPart : $this->integerPart;
+     }
+     public function isNegative() : bool
+     {
+
+
+4) /home/evalverde/projects/Price/Src/Domain/Number.php:119    [M] CastFloat
+
+--- Original
++++ New
+@@ @@
+     }
+     public function toFloat() : float
+     {
+-        return (float) (self::EMPTY_STRING !== $this->fractionalPart) ? $this->integerPart . $this->fractionalPart : $this->integerPart;
++        return self::EMPTY_STRING !== $this->fractionalPart ? $this->integerPart . $this->fractionalPart : $this->integerPart;
+     }
+     public function isNegative() : bool
+     {
+
+
+5) /home/evalverde/projects/Price/Src/Domain/Number.php:129    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     {
+         return self::NEGATIVE_SIGN === $this->integerPart[0];
+     }
+-    public function getIntegerPart() : string
++    protected function getIntegerPart() : string
+     {
+         return $this->integerPart;
+     }
+
+
+6) /home/evalverde/projects/Price/Src/Domain/Number.php:134    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     {
+         return $this->integerPart;
+     }
+-    public function getFractionalPart() : string
++    protected function getFractionalPart() : string
+     {
+         return $this->fractionalPart;
+     }
+
+
+7) /home/evalverde/projects/Price/Src/Domain/Number.php:146    [M] FalseValue
+
+--- Original
++++ New
+@@ @@
+         if (null !== $default) {
+             return $default;
+         }
+-        $nonZero = false;
++        $nonZero = true;
+         $characters = strlen($number);
+         for ($position = 0; $position < $characters; ++$position) {
+             $digit = $number[$position];
+
+
+8) /home/evalverde/projects/Price/Src/Domain/Number.php:151    [M] LogicalAnd
+
+--- Original
++++ New
+@@ @@
+         $characters = strlen($number);
+         for ($position = 0; $position < $characters; ++$position) {
+             $digit = $number[$position];
+-            if (!isset($this->numbers[$digit]) && !(0 === $position && self::NEGATIVE_SIGN === $digit)) {
++            if (!isset($this->numbers[$digit]) && !(0 === $position || self::NEGATIVE_SIGN === $digit)) {
+                 throw new \InvalidArgumentException(sprintf('Invalid integer part %1$s. Invalid digit %2$s found', $number, $digit));
+             }
+             if (false === $nonZero && '0' === $digit) {
+
+
+9) /home/evalverde/projects/Price/Src/Domain/Number.php:188    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+         if (self::EMPTY_STRING === $number) {
+             return $number;
+         }
+-        for ($position = 0, $characters = strlen($number); $position < $characters; ++$position) {
++        for ($position = -1, $characters = strlen($number); $position < $characters; ++$position) {
+             $digit = $number[$position];
+             if (!isset($this->numbers[$digit])) {
+                 throw new \InvalidArgumentException(sprintf('Invalid fractional part %1$s. Invalid digit %2$s found', $number, $digit));
+
+
+10) /home/evalverde/projects/Price/Src/Domain/Number.php:188    [M] OneZeroInteger
+
+--- Original
++++ New
+@@ @@
+         if (self::EMPTY_STRING === $number) {
+             return $number;
+         }
+-        for ($position = 0, $characters = strlen($number); $position < $characters; ++$position) {
++        for ($position = 1, $characters = strlen($number); $position < $characters; ++$position) {
+             $digit = $number[$position];
+             if (!isset($this->numbers[$digit])) {
+                 throw new \InvalidArgumentException(sprintf('Invalid fractional part %1$s. Invalid digit %2$s found', $number, $digit));
+
+Timed Out mutants:
+==================
+
+Not Covered mutants:
+====================
+
+
+1) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:31    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+      *
+      * @return bool
+      */
+-    public function has($key)
++    protected function has($key)
+     {
+         $keys = (array) $key;
+         if (!$this->items || $keys === []) {
+
+
+2) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:33    [M] CastArray
+
+--- Original
++++ New
+@@ @@
+      */
+     public function has($key)
+     {
+-        $keys = (array) $key;
++        $keys = $key;
+         if (!$this->items || $keys === []) {
+             return false;
+         }
+
+
+3) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:34    [M] LogicalNot
+
+--- Original
++++ New
+@@ @@
+     public function has($key)
+     {
+         $keys = (array) $key;
+-        if (!$this->items || $keys === []) {
++        if ($this->items || $keys === []) {
+             return false;
+         }
+         foreach ($keys as $key) {
+
+
+4) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:34    [M] Identical
+
+--- Original
++++ New
+@@ @@
+     public function has($key)
+     {
+         $keys = (array) $key;
+-        if (!$this->items || $keys === []) {
++        if (!$this->items || $keys !== []) {
+             return false;
+         }
+         foreach ($keys as $key) {
+
+
+5) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:34    [M] LogicalOr
+
+--- Original
++++ New
+@@ @@
+     public function has($key)
+     {
+         $keys = (array) $key;
+-        if (!$this->items || $keys === []) {
++        if (!$this->items && $keys === []) {
+             return false;
+         }
+         foreach ($keys as $key) {
+
+
+6) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:35    [M] FalseValue
+
+--- Original
++++ New
+@@ @@
+     {
+         $keys = (array) $key;
+         if (!$this->items || $keys === []) {
+-            return false;
++            return true;
+         }
+         foreach ($keys as $key) {
+             $subKeyArray = $this->items;
+
+
+7) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:37    [M] Foreach_
+
+--- Original
++++ New
+@@ @@
+         if (!$this->items || $keys === []) {
+             return false;
+         }
+-        foreach ($keys as $key) {
++        foreach (array() as $key) {
+             $subKeyArray = $this->items;
+             if ($this->exists($this->items, $key)) {
+                 continue;
+
+
+8) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:40    [M] Continue_
+
+--- Original
++++ New
+@@ @@
+         foreach ($keys as $key) {
+             $subKeyArray = $this->items;
+             if ($this->exists($this->items, $key)) {
+-                continue;
++                break;
+             }
+             foreach (explode('.', $key) as $segment) {
+                 if ($this->accessible($subKeyArray) && $this->exists($subKeyArray, $segment)) {
+
+
+9) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:42    [M] Foreach_
+
+--- Original
++++ New
+@@ @@
+             if ($this->exists($this->items, $key)) {
+                 continue;
+             }
+-            foreach (explode('.', $key) as $segment) {
++            foreach (array() as $segment) {
+                 if ($this->accessible($subKeyArray) && $this->exists($subKeyArray, $segment)) {
+                     $subKeyArray = $subKeyArray[$segment];
+                 } else {
+
+
+10) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:43    [M] LogicalAnd
+
+--- Original
++++ New
+@@ @@
+                 continue;
+             }
+             foreach (explode('.', $key) as $segment) {
+-                if ($this->accessible($subKeyArray) && $this->exists($subKeyArray, $segment)) {
++                if ($this->accessible($subKeyArray) || $this->exists($subKeyArray, $segment)) {
+                     $subKeyArray = $subKeyArray[$segment];
+                 } else {
+                     return false;
+
+
+11) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:46    [M] FalseValue
+
+--- Original
++++ New
+@@ @@
+                 if ($this->accessible($subKeyArray) && $this->exists($subKeyArray, $segment)) {
+                     $subKeyArray = $subKeyArray[$segment];
+                 } else {
+-                    return false;
++                    return true;
+                 }
+             }
+         }
+
+
+12) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:51    [M] TrueValue
+
+--- Original
++++ New
+@@ @@
+                 }
+             }
+         }
+-        return true;
++        return false;
+     }
+     /**
+      * Determine whether the given value is array accessible.
+
+
+13) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:63    [M] LogicalOr
+
+--- Original
++++ New
+@@ @@
+      */
+     private function accessible($value)
+     {
+-        return is_array($value) || $value instanceof \ArrayAccess;
++        return is_array($value) && $value instanceof \ArrayAccess;
+     }
+     /**
+      * Determine if the given key exists in the provided array.
+
+
+14) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:80    [M] FunctionCall
+
+--- Original
++++ New
+@@ @@
+         if ($array instanceof \ArrayAccess) {
+             return $array->offsetExists($key);
+         }
+-        return array_key_exists($key, $array);
++        array_key_exists($key, $array);
++        return null;
+     }
+     /**
+      * Get the specified configuration value.
+
+15) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:91    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+      *
+      * @return mixed
+      */
+-    public function get($key, $default = null)
++    protected function get($key, $default = null)
+     {
+         if (is_array($key)) {
+             return $this->getMany($key);
+
+
+16) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:107    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+      *
+      * @return array
+      */
+-    public function getMany($keys)
++    protected function getMany($keys)
+     {
+         $config = [];
+         foreach ($keys as $key => $default) {
+
+
+17) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:110    [M] Foreach_
+
+--- Original
++++ New
+@@ @@
+     public function getMany($keys)
+     {
+         $config = [];
+-        foreach ($keys as $key => $default) {
++        foreach (array() as $key => $default) {
+             if (is_numeric($key)) {
+                 [$key, $default] = [$default, null];
+             }
+
+
+18) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:112    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+         $config = [];
+         foreach ($keys as $key => $default) {
+             if (is_numeric($key)) {
+-                [$key, $default] = [$default, null];
++                [$default] = [$default, null];
+             }
+             $config[$key] = $this->arrayGet($this->items, $key, $default);
+         }
+
+
+19) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:112    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+         $config = [];
+         foreach ($keys as $key => $default) {
+             if (is_numeric($key)) {
+-                [$key, $default] = [$default, null];
++                [$key, $default] = [null];
+             }
+             $config[$key] = $this->arrayGet($this->items, $key, $default);
+         }
+
+
+20) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:126    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+      * @param array|string $key
+      * @param mixed        $value
+      */
+-    public function set($key, $value = null)
++    protected function set($key, $value = null)
+     {
+         $keys = is_array($key) ? $key : [$key => $value];
+         foreach ($keys as $key => $value) {
+
+
+21) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:128    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+      */
+     public function set($key, $value = null)
+     {
+-        $keys = is_array($key) ? $key : [$key => $value];
++        $keys = is_array($key) ? $key : [];
+         foreach ($keys as $key => $value) {
+             $this->arraySet($this->items, $key, $value);
+         }
+
+
+22) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:129    [M] Foreach_
+
+--- Original
++++ New
+@@ @@
+     public function set($key, $value = null)
+     {
+         $keys = is_array($key) ? $key : [$key => $value];
+-        foreach ($keys as $key => $value) {
++        foreach (array() as $key => $value) {
+             $this->arraySet($this->items, $key, $value);
+         }
+     }
+
+
+23) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:130    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+     {
+         $keys = is_array($key) ? $key : [$key => $value];
+         foreach ($keys as $key => $value) {
+-            $this->arraySet($this->items, $key, $value);
++            
+         }
+     }
+     /**
+
+
+24) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:151    [M] GreaterThanNegotiation
+
+--- Original
++++ New
+@@ @@
+             return $array = $value;
+         }
+         $keys = explode('.', $key);
+-        while (count($keys) > 1) {
++        while (count($keys) <= 1) {
+             $key = array_shift($keys);
+             // If the key doesn't exist at this depth, we will just create an empty array
+             // to hold the next value, allowing us to create the arrays to hold final
+
+
+25) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:151    [M] GreaterThan
+
+--- Original
++++ New
+@@ @@
+             return $array = $value;
+         }
+         $keys = explode('.', $key);
+-        while (count($keys) > 1) {
++        while (count($keys) >= 1) {
+             $key = array_shift($keys);
+             // If the key doesn't exist at this depth, we will just create an empty array
+             // to hold the next value, allowing us to create the arrays to hold final
+
+
+26) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:156    [M] LogicalNot
+
+--- Original
++++ New
+@@ @@
+             // If the key doesn't exist at this depth, we will just create an empty array
+             // to hold the next value, allowing us to create the arrays to hold final
+             // values at the correct depth. Then we'll keep digging into the array.
+-            if (!isset($array[$key]) || !is_array($array[$key])) {
++            if (isset($array[$key]) || !is_array($array[$key])) {
+                 $array[$key] = [];
+             }
+             $array =& $array[$key];
+
+
+27) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:156    [M] LogicalNot
+
+--- Original
++++ New
+@@ @@
+             // If the key doesn't exist at this depth, we will just create an empty array
+             // to hold the next value, allowing us to create the arrays to hold final
+             // values at the correct depth. Then we'll keep digging into the array.
+-            if (!isset($array[$key]) || !is_array($array[$key])) {
++            if (!isset($array[$key]) || is_array($array[$key])) {
+                 $array[$key] = [];
+             }
+             $array =& $array[$key];
+
+
+28) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:156    [M] LogicalOr
+
+--- Original
++++ New
+@@ @@
+             // If the key doesn't exist at this depth, we will just create an empty array
+             // to hold the next value, allowing us to create the arrays to hold final
+             // values at the correct depth. Then we'll keep digging into the array.
+-            if (!isset($array[$key]) || !is_array($array[$key])) {
++            if (!isset($array[$key]) && !is_array($array[$key])) {
+                 $array[$key] = [];
+             }
+             $array =& $array[$key];
+
+
+29) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:177    [M] LogicalNot
+
+--- Original
++++ New
+@@ @@
+      */
+     private function arrayGet($array, $key, $default = null)
+     {
+-        if (!$this->accessible($array)) {
++        if ($this->accessible($array)) {
+             return value($default);
+         }
+         if (is_null($key)) {
+
+
+30) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:178    [M] FunctionCall
+
+--- Original
++++ New
+@@ @@
+     private function arrayGet($array, $key, $default = null)
+     {
+         if (!$this->accessible($array)) {
+-            return value($default);
++            value($default);
++            return null;
+         }
+         if (is_null($key)) {
+             return $array;
+
+31) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:186    [M] FalseValue
+
+--- Original
++++ New
+@@ @@
+         if ($this->exists($array, $key)) {
+             return $array[$key];
+         }
+-        if (false === strpos($key, '.')) {
++        if (true === strpos($key, '.')) {
+             return $array[$key] ?? value($default);
+         }
+         foreach (explode('.', $key) as $segment) {
+
+
+32) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:186    [M] Identical
+
+--- Original
++++ New
+@@ @@
+         if ($this->exists($array, $key)) {
+             return $array[$key];
+         }
+-        if (false === strpos($key, '.')) {
++        if (false !== strpos($key, '.')) {
+             return $array[$key] ?? value($default);
+         }
+         foreach (explode('.', $key) as $segment) {
+
+
+33) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:187    [M] Coalesce
+
+--- Original
++++ New
+@@ @@
+             return $array[$key];
+         }
+         if (false === strpos($key, '.')) {
+-            return $array[$key] ?? value($default);
++            return value($default);
+         }
+         foreach (explode('.', $key) as $segment) {
+             if ($this->accessible($array) && $this->exists($array, $segment)) {
+
+
+34) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:189    [M] Foreach_
+
+--- Original
++++ New
+@@ @@
+         if (false === strpos($key, '.')) {
+             return $array[$key] ?? value($default);
+         }
+-        foreach (explode('.', $key) as $segment) {
++        foreach (array() as $segment) {
+             if ($this->accessible($array) && $this->exists($array, $segment)) {
+                 $array = $array[$segment];
+             } else {
+
+
+35) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:190    [M] LogicalAnd
+
+--- Original
++++ New
+@@ @@
+             return $array[$key] ?? value($default);
+         }
+         foreach (explode('.', $key) as $segment) {
+-            if ($this->accessible($array) && $this->exists($array, $segment)) {
++            if ($this->accessible($array) || $this->exists($array, $segment)) {
+                 $array = $array[$segment];
+             } else {
+                 return value($default);
+
+
+36) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:193    [M] FunctionCall
+
+--- Original
++++ New
+@@ @@
+             if ($this->accessible($array) && $this->exists($array, $segment)) {
+                 $array = $array[$segment];
+             } else {
+-                return value($default);
++                value($default);
++                return null;
+             }
+         }
+         return $array;
+
+37) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:206    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+      * @param string $key
+      * @param mixed  $value
+      */
+-    public function prepend($key, $value)
++    protected function prepend($key, $value)
+     {
+         $array = $this->get($key);
+         array_unshift($array, $value);
+
+
+38) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:209    [M] FunctionCallRemoval
+
+--- Original
++++ New
+@@ @@
+     public function prepend($key, $value)
+     {
+         $array = $this->get($key);
+-        array_unshift($array, $value);
++        
+         $this->set($key, $array);
+     }
+     /**
+
+
+39) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:210    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+     {
+         $array = $this->get($key);
+         array_unshift($array, $value);
+-        $this->set($key, $array);
++        
+     }
+     /**
+      * Push a value onto an array configuration value.
+
+
+40) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:219    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+      * @param string $key
+      * @param mixed  $value
+      */
+-    public function push($key, $value)
++    protected function push($key, $value)
+     {
+         $array = $this->get($key);
+         $array[] = $value;
+
+
+41) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:223    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+     {
+         $array = $this->get($key);
+         $array[] = $value;
+-        $this->set($key, $array);
++        
+     }
+     /**
+      * Get all of the configuration items for the application.
+
+
+42) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:231    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+      *
+      * @return array
+      */
+-    public function all()
++    protected function all()
+     {
+         return $this->items;
+     }
+
+
+43) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:268    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+      */
+     public function offsetSet($key, $value)
+     {
+-        $this->set($key, $value);
++        
+     }
+     /**
+      * Unset a configuration option.
+
+
+44) /home/evalverde/projects/Price/Src/Domain/ConfigRepository.php:278    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+      */
+     public function offsetUnset($key)
+     {
+-        $this->set($key, null);
++        
+     }
+ }
+
+
+45) /home/evalverde/projects/Price/Src/Domain/Currency.php:11    [M] Identical
+
+--- Original
++++ New
+@@ @@
+     private $code;
+     public function __construct(string $code)
+     {
+-        if ('' === $code) {
++        if ('' !== $code) {
+             throw new \InvalidArgumentException('Currency code should not be empty string');
+         }
+         $this->code = $code;
+
+
+46) /home/evalverde/projects/Price/Src/Domain/Currency.php:12    [M] Throw_
+
+--- Original
++++ New
+@@ @@
+     public function __construct(string $code)
+     {
+         if ('' === $code) {
+-            throw new \InvalidArgumentException('Currency code should not be empty string');
++            new \InvalidArgumentException('Currency code should not be empty string');
+         }
+         $this->code = $code;
+     }
+
+
+47) /home/evalverde/projects/Price/Src/Domain/Currency.php:18    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+         }
+         $this->code = $code;
+     }
+-    public function getCode() : string
++    protected function getCode() : string
+     {
+         return $this->code;
+     }
+
+
+48) /home/evalverde/projects/Price/Src/Domain/Currency.php:23    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     {
+         return $this->code;
+     }
+-    public function equals(Currency $other) : bool
++    protected function equals(Currency $other) : bool
+     {
+         return $this->code === $other->code;
+     }
+
+
+49) /home/evalverde/projects/Price/Src/Domain/Currency.php:25    [M] Identical
+
+--- Original
++++ New
+@@ @@
+     }
+     public function equals(Currency $other) : bool
+     {
+-        return $this->code === $other->code;
++        return $this->code !== $other->code;
+     }
+     public function isAvailableWithin(Currencies $currencies) : bool
+     {
+
+
+50) /home/evalverde/projects/Price/Src/Domain/Currency.php:28    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     {
+         return $this->code === $other->code;
+     }
+-    public function isAvailableWithin(Currencies $currencies) : bool
++    protected function isAvailableWithin(Currencies $currencies) : bool
+     {
+         return $currencies->contains($this);
+     }
+
+
+51) /home/evalverde/projects/Price/Src/Domain/Number.php:44    [M] Throw_
+
+--- Original
++++ New
+@@ @@
+     public static function fromFloat(float $number) : self
+     {
+         if (false === is_float($number)) {
+-            throw new \InvalidArgumentException('Floating point value expected');
++            new \InvalidArgumentException('Floating point value expected');
+         }
+         return self::fromString(sprintf(self::FLOAT_FORMAT, $number));
+     }
+
+
+52) /home/evalverde/projects/Price/Src/Domain/Number.php:86    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+         }
+         return $this->integerPart . self::NUMERIC_SEPARATOR . $this->fractionalPart;
+     }
+-    public function isDecimal() : bool
++    protected function isDecimal() : bool
+     {
+         return self::EMPTY_STRING !== $this->fractionalPart;
+     }
+
+
+53) /home/evalverde/projects/Price/Src/Domain/Number.php:88    [M] NotIdentical
+
+--- Original
++++ New
+@@ @@
+     }
+     public function isDecimal() : bool
+     {
+-        return self::EMPTY_STRING !== $this->fractionalPart;
++        return self::EMPTY_STRING === $this->fractionalPart;
+     }
+     public function isInteger() : bool
+     {
+
+
+54) /home/evalverde/projects/Price/Src/Domain/Number.php:91    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     {
+         return self::EMPTY_STRING !== $this->fractionalPart;
+     }
+-    public function isInteger() : bool
++    protected function isInteger() : bool
+     {
+         return self::EMPTY_STRING === $this->fractionalPart;
+     }
+
+
+55) /home/evalverde/projects/Price/Src/Domain/Number.php:93    [M] Identical
+
+--- Original
++++ New
+@@ @@
+     }
+     public function isInteger() : bool
+     {
+-        return self::EMPTY_STRING === $this->fractionalPart;
++        return self::EMPTY_STRING !== $this->fractionalPart;
+     }
+     public function isHalf() : bool
+     {
+
+
+56) /home/evalverde/projects/Price/Src/Domain/Number.php:96    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     {
+         return self::EMPTY_STRING === $this->fractionalPart;
+     }
+-    public function isHalf() : bool
++    protected function isHalf() : bool
+     {
+         return '5' === $this->fractionalPart;
+     }
+
+
+57) /home/evalverde/projects/Price/Src/Domain/Number.php:98    [M] Identical
+
+--- Original
++++ New
+@@ @@
+     }
+     public function isHalf() : bool
+     {
+-        return '5' === $this->fractionalPart;
++        return '5' !== $this->fractionalPart;
+     }
+     public function isCurrentEven() : bool
+     {
+
+
+58) /home/evalverde/projects/Price/Src/Domain/Number.php:101    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     {
+         return '5' === $this->fractionalPart;
+     }
+-    public function isCurrentEven() : bool
++    protected function isCurrentEven() : bool
+     {
+         $lastIntegerPartNumber = $this->integerPart[strlen($this->integerPart) - 1];
+         return 0 === $lastIntegerPartNumber % 2;
+
+
+59) /home/evalverde/projects/Price/Src/Domain/Number.php:103    [M] OneZeroInteger
+
+--- Original
++++ New
+@@ @@
+     }
+     public function isCurrentEven() : bool
+     {
+-        $lastIntegerPartNumber = $this->integerPart[strlen($this->integerPart) - 1];
++        $lastIntegerPartNumber = $this->integerPart[strlen($this->integerPart) - 0];
+         return 0 === $lastIntegerPartNumber % 2;
+     }
+     public function isCloserToNext() : bool
+
+
+60) /home/evalverde/projects/Price/Src/Domain/Number.php:103    [M] Minus
+
+--- Original
++++ New
+@@ @@
+     }
+     public function isCurrentEven() : bool
+     {
+-        $lastIntegerPartNumber = $this->integerPart[strlen($this->integerPart) - 1];
++        $lastIntegerPartNumber = $this->integerPart[strlen($this->integerPart) + 1];
+         return 0 === $lastIntegerPartNumber % 2;
+     }
+     public function isCloserToNext() : bool
+
+
+61) /home/evalverde/projects/Price/Src/Domain/Number.php:103    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+     }
+     public function isCurrentEven() : bool
+     {
+-        $lastIntegerPartNumber = $this->integerPart[strlen($this->integerPart) - 1];
++        $lastIntegerPartNumber = $this->integerPart[strlen($this->integerPart) - 2];
+         return 0 === $lastIntegerPartNumber % 2;
+     }
+     public function isCloserToNext() : bool
+
+
+62) /home/evalverde/projects/Price/Src/Domain/Number.php:105    [M] Identical
+
+--- Original
++++ New
+@@ @@
+     public function isCurrentEven() : bool
+     {
+         $lastIntegerPartNumber = $this->integerPart[strlen($this->integerPart) - 1];
+-        return 0 === $lastIntegerPartNumber % 2;
++        return 0 !== $lastIntegerPartNumber % 2;
+     }
+     public function isCloserToNext() : bool
+     {
+
+
+63) /home/evalverde/projects/Price/Src/Domain/Number.php:105    [M] Modulus
+
+--- Original
++++ New
+@@ @@
+     public function isCurrentEven() : bool
+     {
+         $lastIntegerPartNumber = $this->integerPart[strlen($this->integerPart) - 1];
+-        return 0 === $lastIntegerPartNumber % 2;
++        return 0 === $lastIntegerPartNumber * 2;
+     }
+     public function isCloserToNext() : bool
+     {
+
+
+64) /home/evalverde/projects/Price/Src/Domain/Number.php:105    [M] OneZeroInteger
+
+--- Original
++++ New
+@@ @@
+     public function isCurrentEven() : bool
+     {
+         $lastIntegerPartNumber = $this->integerPart[strlen($this->integerPart) - 1];
+-        return 0 === $lastIntegerPartNumber % 2;
++        return 1 === $lastIntegerPartNumber % 2;
+     }
+     public function isCloserToNext() : bool
+     {
+
+
+65) /home/evalverde/projects/Price/Src/Domain/Number.php:105    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+     public function isCurrentEven() : bool
+     {
+         $lastIntegerPartNumber = $this->integerPart[strlen($this->integerPart) - 1];
+-        return 0 === $lastIntegerPartNumber % 2;
++        return 0 === $lastIntegerPartNumber % 3;
+     }
+     public function isCloserToNext() : bool
+     {
+
+
+66) /home/evalverde/projects/Price/Src/Domain/Number.php:105    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+     public function isCurrentEven() : bool
+     {
+         $lastIntegerPartNumber = $this->integerPart[strlen($this->integerPart) - 1];
+-        return 0 === $lastIntegerPartNumber % 2;
++        return 0 === $lastIntegerPartNumber % 1;
+     }
+     public function isCloserToNext() : bool
+     {
+
+
+67) /home/evalverde/projects/Price/Src/Domain/Number.php:105    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+     public function isCurrentEven() : bool
+     {
+         $lastIntegerPartNumber = $this->integerPart[strlen($this->integerPart) - 1];
+-        return 0 === $lastIntegerPartNumber % 2;
++        return -1 === $lastIntegerPartNumber % 2;
+     }
+     public function isCloserToNext() : bool
+     {
+
+
+68) /home/evalverde/projects/Price/Src/Domain/Number.php:108    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+         $lastIntegerPartNumber = $this->integerPart[strlen($this->integerPart) - 1];
+         return 0 === $lastIntegerPartNumber % 2;
+     }
+-    public function isCloserToNext() : bool
++    protected function isCloserToNext() : bool
+     {
+         if (self::EMPTY_STRING === $this->fractionalPart) {
+             return false;
+
+
+69) /home/evalverde/projects/Price/Src/Domain/Number.php:110    [M] Identical
+
+--- Original
++++ New
+@@ @@
+     }
+     public function isCloserToNext() : bool
+     {
+-        if (self::EMPTY_STRING === $this->fractionalPart) {
++        if (self::EMPTY_STRING !== $this->fractionalPart) {
+             return false;
+         }
+         return $this->fractionalPart[0] >= 5;
+
+
+70) /home/evalverde/projects/Price/Src/Domain/Number.php:111    [M] FalseValue
+
+--- Original
++++ New
+@@ @@
+     public function isCloserToNext() : bool
+     {
+         if (self::EMPTY_STRING === $this->fractionalPart) {
+-            return false;
++            return true;
+         }
+         return $this->fractionalPart[0] >= 5;
+     }
+
+
+71) /home/evalverde/projects/Price/Src/Domain/Number.php:114    [M] GreaterThanOrEqualToNegotiation
+
+--- Original
++++ New
+@@ @@
+         if (self::EMPTY_STRING === $this->fractionalPart) {
+             return false;
+         }
+-        return $this->fractionalPart[0] >= 5;
++        return $this->fractionalPart[0] < 5;
+     }
+     public function toFloat() : float
+     {
+
+
+72) /home/evalverde/projects/Price/Src/Domain/Number.php:114    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+         if (self::EMPTY_STRING === $this->fractionalPart) {
+             return false;
+         }
+-        return $this->fractionalPart[0] >= 5;
++        return $this->fractionalPart[-1] >= 5;
+     }
+     public function toFloat() : float
+     {
+
+
+73) /home/evalverde/projects/Price/Src/Domain/Number.php:114    [M] GreaterThanOrEqualTo
+
+--- Original
++++ New
+@@ @@
+         if (self::EMPTY_STRING === $this->fractionalPart) {
+             return false;
+         }
+-        return $this->fractionalPart[0] >= 5;
++        return $this->fractionalPart[0] > 5;
+     }
+     public function toFloat() : float
+     {
+
+
+74) /home/evalverde/projects/Price/Src/Domain/Number.php:114    [M] OneZeroInteger
+
+--- Original
++++ New
+@@ @@
+         if (self::EMPTY_STRING === $this->fractionalPart) {
+             return false;
+         }
+-        return $this->fractionalPart[0] >= 5;
++        return $this->fractionalPart[1] >= 5;
+     }
+     public function toFloat() : float
+     {
+
+
+75) /home/evalverde/projects/Price/Src/Domain/Number.php:124    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     {
+         return (float) (self::EMPTY_STRING !== $this->fractionalPart) ? $this->integerPart . $this->fractionalPart : $this->integerPart;
+     }
+-    public function isNegative() : bool
++    protected function isNegative() : bool
+     {
+         return self::NEGATIVE_SIGN === $this->integerPart[0];
+     }
+
+
+76) /home/evalverde/projects/Price/Src/Domain/Number.php:126    [M] Identical
+
+--- Original
++++ New
+@@ @@
+     }
+     public function isNegative() : bool
+     {
+-        return self::NEGATIVE_SIGN === $this->integerPart[0];
++        return self::NEGATIVE_SIGN !== $this->integerPart[0];
+     }
+     public function getIntegerPart() : string
+     {
+
+
+77) /home/evalverde/projects/Price/Src/Domain/Number.php:126    [M] OneZeroInteger
+
+--- Original
++++ New
+@@ @@
+     }
+     public function isNegative() : bool
+     {
+-        return self::NEGATIVE_SIGN === $this->integerPart[0];
++        return self::NEGATIVE_SIGN === $this->integerPart[1];
+     }
+     public function getIntegerPart() : string
+     {
+
+
+78) /home/evalverde/projects/Price/Src/Domain/Number.php:126    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+     }
+     public function isNegative() : bool
+     {
+-        return self::NEGATIVE_SIGN === $this->integerPart[0];
++        return self::NEGATIVE_SIGN === $this->integerPart[-1];
+     }
+     public function getIntegerPart() : string
+     {
+
+
+79) /home/evalverde/projects/Price/Src/Domain/Number.php:158    [M] Throw_
+
+--- Original
++++ New
+@@ @@
+                 throw new \InvalidArgumentException(sprintf('Invalid integer part %1$s. Invalid digit %2$s found', $number, $digit));
+             }
+             if (false === $nonZero && '0' === $digit) {
+-                throw new \InvalidArgumentException('Leading zeros are not allowed');
++                new \InvalidArgumentException('Leading zeros are not allowed');
+             }
+             $nonZero = true;
+         }
+
+
+80) /home/evalverde/projects/Price/Src/Domain/NumberFormatDecorator.php:19    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+      *
+      * @return Number
+      */
+-    public function roundedNumber(float $round = 0.5) : Number
++    protected function roundedNumber(float $round = 0.5) : Number
+     {
+         $round = (float) $round;
+         $number = $this->number->toFloat();
+
+
+81) /home/evalverde/projects/Price/Src/Domain/NumberFormatDecorator.php:21    [M] CastFloat
+
+--- Original
++++ New
+@@ @@
+      */
+     public function roundedNumber(float $round = 0.5) : Number
+     {
+-        $round = (float) $round;
++        $round = $round;
+         $number = $this->number->toFloat();
+         $mod = fmod($number, $round);
+         $result = 0.0;
+
+
+82) /home/evalverde/projects/Price/Src/Domain/NumberFormatDecorator.php:24    [M] OneZeroFloat
+
+--- Original
++++ New
+@@ @@
+         $round = (float) $round;
+         $number = $this->number->toFloat();
+         $mod = fmod($number, $round);
+-        $result = 0.0;
++        $result = 1.0;
+         if (!is_null($mod) && $mod === $result) {
+             $result = $number;
+         } else {
+
+
+83) /home/evalverde/projects/Price/Src/Domain/NumberFormatDecorator.php:26    [M] Identical
+
+--- Original
++++ New
+@@ @@
+         $number = $this->number->toFloat();
+         $mod = fmod($number, $round);
+         $result = 0.0;
+-        if (!is_null($mod) && $mod === $result) {
++        if (!is_null($mod) && $mod !== $result) {
+             $result = $number;
+         } else {
+             $result = $round - $mod + $number;
+
+
+84) /home/evalverde/projects/Price/Src/Domain/NumberFormatDecorator.php:26    [M] LogicalAnd
+
+--- Original
++++ New
+@@ @@
+         $number = $this->number->toFloat();
+         $mod = fmod($number, $round);
+         $result = 0.0;
+-        if (!is_null($mod) && $mod === $result) {
++        if (!is_null($mod) || $mod === $result) {
+             $result = $number;
+         } else {
+             $result = $round - $mod + $number;
+
+
+85) /home/evalverde/projects/Price/Src/Domain/NumberFormatDecorator.php:26    [M] LogicalNot
+
+--- Original
++++ New
+@@ @@
+         $number = $this->number->toFloat();
+         $mod = fmod($number, $round);
+         $result = 0.0;
+-        if (!is_null($mod) && $mod === $result) {
++        if (is_null($mod) && $mod === $result) {
+             $result = $number;
+         } else {
+             $result = $round - $mod + $number;
+
+
+86) /home/evalverde/projects/Price/Src/Domain/NumberFormatDecorator.php:29    [M] Minus
+
+--- Original
++++ New
+@@ @@
+         if (!is_null($mod) && $mod === $result) {
+             $result = $number;
+         } else {
+-            $result = $round - $mod + $number;
++            $result = $round + $mod + $number;
+         }
+         if (!is_null($round) && !is_null($result) && mb_strlen($result) > mb_strlen($round)) {
+             $result = $this->numberFormat($result, strlen($this->number->getFractionalPart()));
+
+
+87) /home/evalverde/projects/Price/Src/Domain/NumberFormatDecorator.php:29    [M] Plus
+
+--- Original
++++ New
+@@ @@
+         if (!is_null($mod) && $mod === $result) {
+             $result = $number;
+         } else {
+-            $result = $round - $mod + $number;
++            $result = $round - $mod - $number;
+         }
+         if (!is_null($round) && !is_null($result) && mb_strlen($result) > mb_strlen($round)) {
+             $result = $this->numberFormat($result, strlen($this->number->getFractionalPart()));
+
+
+88) /home/evalverde/projects/Price/Src/Domain/NumberFormatDecorator.php:32    [M] MBString
+
+--- Original
++++ New
+@@ @@
+         } else {
+             $result = $round - $mod + $number;
+         }
+-        if (!is_null($round) && !is_null($result) && mb_strlen($result) > mb_strlen($round)) {
++        if (!is_null($round) && !is_null($result) && strlen($result) > mb_strlen($round)) {
+             $result = $this->numberFormat($result, strlen($this->number->getFractionalPart()));
+         }
+         return Number::fromFloat($result);
+
+
+89) /home/evalverde/projects/Price/Src/Domain/NumberFormatDecorator.php:32    [M] LogicalAnd
+
+--- Original
++++ New
+@@ @@
+         } else {
+             $result = $round - $mod + $number;
+         }
+-        if (!is_null($round) && !is_null($result) && mb_strlen($result) > mb_strlen($round)) {
++        if ((!is_null($round) || !is_null($result)) && mb_strlen($result) > mb_strlen($round)) {
+             $result = $this->numberFormat($result, strlen($this->number->getFractionalPart()));
+         }
+         return Number::fromFloat($result);
+
+
+90) /home/evalverde/projects/Price/Src/Domain/NumberFormatDecorator.php:32    [M] LogicalNot
+
+--- Original
++++ New
+@@ @@
+         } else {
+             $result = $round - $mod + $number;
+         }
+-        if (!is_null($round) && !is_null($result) && mb_strlen($result) > mb_strlen($round)) {
++        if (is_null($round) && !is_null($result) && mb_strlen($result) > mb_strlen($round)) {
+             $result = $this->numberFormat($result, strlen($this->number->getFractionalPart()));
+         }
+         return Number::fromFloat($result);
+
+
+91) /home/evalverde/projects/Price/Src/Domain/NumberFormatDecorator.php:32    [M] LogicalNot
+
+--- Original
++++ New
+@@ @@
+         } else {
+             $result = $round - $mod + $number;
+         }
+-        if (!is_null($round) && !is_null($result) && mb_strlen($result) > mb_strlen($round)) {
++        if (!is_null($round) && is_null($result) && mb_strlen($result) > mb_strlen($round)) {
+             $result = $this->numberFormat($result, strlen($this->number->getFractionalPart()));
+         }
+         return Number::fromFloat($result);
+
+
+92) /home/evalverde/projects/Price/Src/Domain/NumberFormatDecorator.php:32    [M] LogicalAnd
+
+--- Original
++++ New
+@@ @@
+         } else {
+             $result = $round - $mod + $number;
+         }
+-        if (!is_null($round) && !is_null($result) && mb_strlen($result) > mb_strlen($round)) {
++        if (!is_null($round) && !is_null($result) || mb_strlen($result) > mb_strlen($round)) {
+             $result = $this->numberFormat($result, strlen($this->number->getFractionalPart()));
+         }
+         return Number::fromFloat($result);
+
+
+93) /home/evalverde/projects/Price/Src/Domain/NumberFormatDecorator.php:32    [M] GreaterThanNegotiation
+
+--- Original
++++ New
+@@ @@
+         } else {
+             $result = $round - $mod + $number;
+         }
+-        if (!is_null($round) && !is_null($result) && mb_strlen($result) > mb_strlen($round)) {
++        if (!is_null($round) && !is_null($result) && mb_strlen($result) <= mb_strlen($round)) {
+             $result = $this->numberFormat($result, strlen($this->number->getFractionalPart()));
+         }
+         return Number::fromFloat($result);
+
+
+94) /home/evalverde/projects/Price/Src/Domain/NumberFormatDecorator.php:32    [M] GreaterThan
+
+--- Original
++++ New
+@@ @@
+         } else {
+             $result = $round - $mod + $number;
+         }
+-        if (!is_null($round) && !is_null($result) && mb_strlen($result) > mb_strlen($round)) {
++        if (!is_null($round) && !is_null($result) && mb_strlen($result) >= mb_strlen($round)) {
+             $result = $this->numberFormat($result, strlen($this->number->getFractionalPart()));
+         }
+         return Number::fromFloat($result);
+
+
+95) /home/evalverde/projects/Price/Src/Domain/NumberFormatDecorator.php:32    [M] MBString
+
+--- Original
++++ New
+@@ @@
+         } else {
+             $result = $round - $mod + $number;
+         }
+-        if (!is_null($round) && !is_null($result) && mb_strlen($result) > mb_strlen($round)) {
++        if (!is_null($round) && !is_null($result) && mb_strlen($result) > strlen($round)) {
+             $result = $this->numberFormat($result, strlen($this->number->getFractionalPart()));
+         }
+         return Number::fromFloat($result);
+
+
+96) /home/evalverde/projects/Price/Src/Domain/NumberFormatDecorator.php:39    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+         }
+         return Number::fromFloat($result);
+     }
+-    private function numberFormat(float $psp, $precision = 2) : float
++    private function numberFormat(float $psp, $precision = 3) : float
+     {
+         return (float) number_format($psp, $precision, '.', '');
+     }
+
+
+97) /home/evalverde/projects/Price/Src/Domain/NumberFormatDecorator.php:39    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+         }
+         return Number::fromFloat($result);
+     }
+-    private function numberFormat(float $psp, $precision = 2) : float
++    private function numberFormat(float $psp, $precision = 1) : float
+     {
+         return (float) number_format($psp, $precision, '.', '');
+     }
+
+
+98) /home/evalverde/projects/Price/Src/Domain/NumberFormatDecorator.php:41    [M] CastFloat
+
+--- Original
++++ New
+@@ @@
+     }
+     private function numberFormat(float $psp, $precision = 2) : float
+     {
+-        return (float) number_format($psp, $precision, '.', '');
++        return number_format($psp, $precision, '.', '');
+     }
+     private function numberFormatRounded(float $psp, $round = false, $precision = 2) : float
+     {
+
+
+99) /home/evalverde/projects/Price/Src/Domain/NumberFormatDecorator.php:44    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+     {
+         return (float) number_format($psp, $precision, '.', '');
+     }
+-    private function numberFormatRounded(float $psp, $round = false, $precision = 2) : float
++    private function numberFormatRounded(float $psp, $round = false, $precision = 3) : float
+     {
+         return intval($psp * ($p = pow(10, $precision))) / $p;
+     }
+ }
+
+100) /home/evalverde/projects/Price/Src/Domain/NumberFormatDecorator.php:44    [M] FalseValue
+
+--- Original
++++ New
+@@ @@
+     {
+         return (float) number_format($psp, $precision, '.', '');
+     }
+-    private function numberFormatRounded(float $psp, $round = false, $precision = 2) : float
++    private function numberFormatRounded(float $psp, $round = true, $precision = 2) : float
+     {
+         return intval($psp * ($p = pow(10, $precision))) / $p;
+     }
+ }
+
+101) /home/evalverde/projects/Price/Src/Domain/NumberFormatDecorator.php:44    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+     {
+         return (float) number_format($psp, $precision, '.', '');
+     }
+-    private function numberFormatRounded(float $psp, $round = false, $precision = 2) : float
++    private function numberFormatRounded(float $psp, $round = false, $precision = 1) : float
+     {
+         return intval($psp * ($p = pow(10, $precision))) / $p;
+     }
+ }
+
+102) /home/evalverde/projects/Price/Src/Domain/NumberFormatDecorator.php:46    [M] Division
+
+--- Original
++++ New
+@@ @@
+     }
+     private function numberFormatRounded(float $psp, $round = false, $precision = 2) : float
+     {
+-        return intval($psp * ($p = pow(10, $precision))) / $p;
++        return intval($psp * ($p = pow(10, $precision))) * $p;
+     }
+ }
+
+
+103) /home/evalverde/projects/Price/Src/Domain/NumberFormatDecorator.php:46    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+     }
+     private function numberFormatRounded(float $psp, $round = false, $precision = 2) : float
+     {
+-        return intval($psp * ($p = pow(10, $precision))) / $p;
++        return intval($psp * ($p = pow(11, $precision))) / $p;
+     }
+ }
+
+
+104) /home/evalverde/projects/Price/Src/Domain/NumberFormatDecorator.php:46    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+     }
+     private function numberFormatRounded(float $psp, $round = false, $precision = 2) : float
+     {
+-        return intval($psp * ($p = pow(10, $precision))) / $p;
++        return intval($psp * ($p = pow(9, $precision))) / $p;
+     }
+ }
+
+
+105) /home/evalverde/projects/Price/Src/Domain/NumberFormatDecorator.php:46    [M] Multiplication
+
+--- Original
++++ New
+@@ @@
+     }
+     private function numberFormatRounded(float $psp, $round = false, $precision = 2) : float
+     {
+-        return intval($psp * ($p = pow(10, $precision))) / $p;
++        return intval($psp / ($p = pow(10, $precision))) / $p;
+     }
+ }
+
+
+106) /home/evalverde/projects/Price/Src/Domain/NumericPrice.php:18    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+         $this->integer = $integer;
+         $this->decimal = $decimal;
+     }
+-    public function getFloatingPrice() : float
++    protected function getFloatingPrice() : float
+     {
+         return (float) ($this->integer . '.' . $this->decimal);
+     }
+
+
+107) /home/evalverde/projects/Price/Src/Domain/NumericPrice.php:20    [M] CastFloat
+
+--- Original
++++ New
+@@ @@
+     }
+     public function getFloatingPrice() : float
+     {
+-        return (float) ($this->integer . '.' . $this->decimal);
++        return $this->integer . '.' . $this->decimal;
+     }
+     public function __toString()
+     {
+
+
+108) /home/evalverde/projects/Price/Src/Domain/NumericPrice.php:25    [M] CastString
+
+--- Original
++++ New
+@@ @@
+     }
+     public function __toString()
+     {
+-        return (string) $this->integer . '.' . $this->decimal;
++        return $this->integer . '.' . $this->decimal;
+     }
+     public static function createPrice(int $integer, int $decimal) : self
+     {
+
+
+109) /home/evalverde/projects/Price/Src/Domain/NumericPrice.php:28    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     {
+         return (string) $this->integer . '.' . $this->decimal;
+     }
+-    public static function createPrice(int $integer, int $decimal) : self
++    protected static function createPrice(int $integer, int $decimal) : self
+     {
+         return new static($integer, $decimal);
+     }
+ }
+
+110) /home/evalverde/projects/Price/Src/Domain/Rounder.php:16    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+      *
+      * @return string
+      */
+-    public static function roundMoneyValue(string $moneyValue, int $targetDigits, int $havingDigits)
++    protected static function roundMoneyValue(string $moneyValue, int $targetDigits, int $havingDigits)
+     {
+         $valueLength = strlen($moneyValue);
+         $shouldRound = $targetDigits < $havingDigits && $valueLength - $havingDigits + $targetDigits > 0;
+
+
+111) /home/evalverde/projects/Price/Src/Domain/Rounder.php:19    [M] Minus
+
+--- Original
++++ New
+@@ @@
+     public static function roundMoneyValue(string $moneyValue, int $targetDigits, int $havingDigits)
+     {
+         $valueLength = strlen($moneyValue);
+-        $shouldRound = $targetDigits < $havingDigits && $valueLength - $havingDigits + $targetDigits > 0;
++        $shouldRound = $targetDigits < $havingDigits && $valueLength + $havingDigits + $targetDigits > 0;
+         if ($shouldRound && $moneyValue[$valueLength - $havingDigits + $targetDigits] >= 5) {
+             $position = $valueLength - $havingDigits + $targetDigits;
+             $addend = 1;
+
+
+112) /home/evalverde/projects/Price/Src/Domain/Rounder.php:19    [M] Plus
+
+--- Original
++++ New
+@@ @@
+     public static function roundMoneyValue(string $moneyValue, int $targetDigits, int $havingDigits)
+     {
+         $valueLength = strlen($moneyValue);
+-        $shouldRound = $targetDigits < $havingDigits && $valueLength - $havingDigits + $targetDigits > 0;
++        $shouldRound = $targetDigits < $havingDigits && $valueLength - $havingDigits - $targetDigits > 0;
+         if ($shouldRound && $moneyValue[$valueLength - $havingDigits + $targetDigits] >= 5) {
+             $position = $valueLength - $havingDigits + $targetDigits;
+             $addend = 1;
+
+
+113) /home/evalverde/projects/Price/Src/Domain/Rounder.php:19    [M] GreaterThan
+
+--- Original
++++ New
+@@ @@
+     public static function roundMoneyValue(string $moneyValue, int $targetDigits, int $havingDigits)
+     {
+         $valueLength = strlen($moneyValue);
+-        $shouldRound = $targetDigits < $havingDigits && $valueLength - $havingDigits + $targetDigits > 0;
++        $shouldRound = $targetDigits < $havingDigits && $valueLength - $havingDigits + $targetDigits >= 0;
+         if ($shouldRound && $moneyValue[$valueLength - $havingDigits + $targetDigits] >= 5) {
+             $position = $valueLength - $havingDigits + $targetDigits;
+             $addend = 1;
+
+
+114) /home/evalverde/projects/Price/Src/Domain/Rounder.php:19    [M] GreaterThanNegotiation
+
+--- Original
++++ New
+@@ @@
+     public static function roundMoneyValue(string $moneyValue, int $targetDigits, int $havingDigits)
+     {
+         $valueLength = strlen($moneyValue);
+-        $shouldRound = $targetDigits < $havingDigits && $valueLength - $havingDigits + $targetDigits > 0;
++        $shouldRound = $targetDigits < $havingDigits && $valueLength - $havingDigits + $targetDigits <= 0;
+         if ($shouldRound && $moneyValue[$valueLength - $havingDigits + $targetDigits] >= 5) {
+             $position = $valueLength - $havingDigits + $targetDigits;
+             $addend = 1;
+
+
+115) /home/evalverde/projects/Price/Src/Domain/Rounder.php:19    [M] LogicalAnd
+
+--- Original
++++ New
+@@ @@
+     public static function roundMoneyValue(string $moneyValue, int $targetDigits, int $havingDigits)
+     {
+         $valueLength = strlen($moneyValue);
+-        $shouldRound = $targetDigits < $havingDigits && $valueLength - $havingDigits + $targetDigits > 0;
++        $shouldRound = $targetDigits < $havingDigits || $valueLength - $havingDigits + $targetDigits > 0;
+         if ($shouldRound && $moneyValue[$valueLength - $havingDigits + $targetDigits] >= 5) {
+             $position = $valueLength - $havingDigits + $targetDigits;
+             $addend = 1;
+
+
+116) /home/evalverde/projects/Price/Src/Domain/Rounder.php:19    [M] LessThanNegotiation
+
+--- Original
++++ New
+@@ @@
+     public static function roundMoneyValue(string $moneyValue, int $targetDigits, int $havingDigits)
+     {
+         $valueLength = strlen($moneyValue);
+-        $shouldRound = $targetDigits < $havingDigits && $valueLength - $havingDigits + $targetDigits > 0;
++        $shouldRound = $targetDigits >= $havingDigits && $valueLength - $havingDigits + $targetDigits > 0;
+         if ($shouldRound && $moneyValue[$valueLength - $havingDigits + $targetDigits] >= 5) {
+             $position = $valueLength - $havingDigits + $targetDigits;
+             $addend = 1;
+
+
+117) /home/evalverde/projects/Price/Src/Domain/Rounder.php:19    [M] LessThan
+
+--- Original
++++ New
+@@ @@
+     public static function roundMoneyValue(string $moneyValue, int $targetDigits, int $havingDigits)
+     {
+         $valueLength = strlen($moneyValue);
+-        $shouldRound = $targetDigits < $havingDigits && $valueLength - $havingDigits + $targetDigits > 0;
++        $shouldRound = $targetDigits <= $havingDigits && $valueLength - $havingDigits + $targetDigits > 0;
+         if ($shouldRound && $moneyValue[$valueLength - $havingDigits + $targetDigits] >= 5) {
+             $position = $valueLength - $havingDigits + $targetDigits;
+             $addend = 1;
+
+
+118) /home/evalverde/projects/Price/Src/Domain/Rounder.php:21    [M] Minus
+
+--- Original
++++ New
+@@ @@
+     {
+         $valueLength = strlen($moneyValue);
+         $shouldRound = $targetDigits < $havingDigits && $valueLength - $havingDigits + $targetDigits > 0;
+-        if ($shouldRound && $moneyValue[$valueLength - $havingDigits + $targetDigits] >= 5) {
++        if ($shouldRound && $moneyValue[$valueLength + $havingDigits + $targetDigits] >= 5) {
+             $position = $valueLength - $havingDigits + $targetDigits;
+             $addend = 1;
+             while ($position > 0) {
+
+
+119) /home/evalverde/projects/Price/Src/Domain/Rounder.php:21    [M] Plus
+
+--- Original
++++ New
+@@ @@
+     {
+         $valueLength = strlen($moneyValue);
+         $shouldRound = $targetDigits < $havingDigits && $valueLength - $havingDigits + $targetDigits > 0;
+-        if ($shouldRound && $moneyValue[$valueLength - $havingDigits + $targetDigits] >= 5) {
++        if ($shouldRound && $moneyValue[$valueLength - $havingDigits - $targetDigits] >= 5) {
+             $position = $valueLength - $havingDigits + $targetDigits;
+             $addend = 1;
+             while ($position > 0) {
+
+
+120) /home/evalverde/projects/Price/Src/Domain/Rounder.php:21    [M] GreaterThanOrEqualTo
+
+--- Original
++++ New
+@@ @@
+     {
+         $valueLength = strlen($moneyValue);
+         $shouldRound = $targetDigits < $havingDigits && $valueLength - $havingDigits + $targetDigits > 0;
+-        if ($shouldRound && $moneyValue[$valueLength - $havingDigits + $targetDigits] >= 5) {
++        if ($shouldRound && $moneyValue[$valueLength - $havingDigits + $targetDigits] > 5) {
+             $position = $valueLength - $havingDigits + $targetDigits;
+             $addend = 1;
+             while ($position > 0) {
+
+
+121) /home/evalverde/projects/Price/Src/Domain/Rounder.php:21    [M] GreaterThanOrEqualToNegotiation
+
+--- Original
++++ New
+@@ @@
+     {
+         $valueLength = strlen($moneyValue);
+         $shouldRound = $targetDigits < $havingDigits && $valueLength - $havingDigits + $targetDigits > 0;
+-        if ($shouldRound && $moneyValue[$valueLength - $havingDigits + $targetDigits] >= 5) {
++        if ($shouldRound && $moneyValue[$valueLength - $havingDigits + $targetDigits] < 5) {
+             $position = $valueLength - $havingDigits + $targetDigits;
+             $addend = 1;
+             while ($position > 0) {
+
+
+122) /home/evalverde/projects/Price/Src/Domain/Rounder.php:21    [M] LogicalAnd
+
+--- Original
++++ New
+@@ @@
+     {
+         $valueLength = strlen($moneyValue);
+         $shouldRound = $targetDigits < $havingDigits && $valueLength - $havingDigits + $targetDigits > 0;
+-        if ($shouldRound && $moneyValue[$valueLength - $havingDigits + $targetDigits] >= 5) {
++        if ($shouldRound || $moneyValue[$valueLength - $havingDigits + $targetDigits] >= 5) {
+             $position = $valueLength - $havingDigits + $targetDigits;
+             $addend = 1;
+             while ($position > 0) {
+
+
+123) /home/evalverde/projects/Price/Src/Domain/Rounder.php:22    [M] Minus
+
+--- Original
++++ New
+@@ @@
+         $valueLength = strlen($moneyValue);
+         $shouldRound = $targetDigits < $havingDigits && $valueLength - $havingDigits + $targetDigits > 0;
+         if ($shouldRound && $moneyValue[$valueLength - $havingDigits + $targetDigits] >= 5) {
+-            $position = $valueLength - $havingDigits + $targetDigits;
++            $position = $valueLength + $havingDigits + $targetDigits;
+             $addend = 1;
+             while ($position > 0) {
+                 $newValue = (string) ((int) $moneyValue[$position - 1] + $addend);
+
+
+124) /home/evalverde/projects/Price/Src/Domain/Rounder.php:22    [M] Plus
+
+--- Original
++++ New
+@@ @@
+         $valueLength = strlen($moneyValue);
+         $shouldRound = $targetDigits < $havingDigits && $valueLength - $havingDigits + $targetDigits > 0;
+         if ($shouldRound && $moneyValue[$valueLength - $havingDigits + $targetDigits] >= 5) {
+-            $position = $valueLength - $havingDigits + $targetDigits;
++            $position = $valueLength - $havingDigits - $targetDigits;
+             $addend = 1;
+             while ($position > 0) {
+                 $newValue = (string) ((int) $moneyValue[$position - 1] + $addend);
+
+
+125) /home/evalverde/projects/Price/Src/Domain/Rounder.php:23    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+         $shouldRound = $targetDigits < $havingDigits && $valueLength - $havingDigits + $targetDigits > 0;
+         if ($shouldRound && $moneyValue[$valueLength - $havingDigits + $targetDigits] >= 5) {
+             $position = $valueLength - $havingDigits + $targetDigits;
+-            $addend = 1;
++            $addend = 2;
+             while ($position > 0) {
+                 $newValue = (string) ((int) $moneyValue[$position - 1] + $addend);
+                 if ($newValue >= 10) {
+
+
+126) /home/evalverde/projects/Price/Src/Domain/Rounder.php:23    [M] OneZeroInteger
+
+--- Original
++++ New
+@@ @@
+         $shouldRound = $targetDigits < $havingDigits && $valueLength - $havingDigits + $targetDigits > 0;
+         if ($shouldRound && $moneyValue[$valueLength - $havingDigits + $targetDigits] >= 5) {
+             $position = $valueLength - $havingDigits + $targetDigits;
+-            $addend = 1;
++            $addend = 0;
+             while ($position > 0) {
+                 $newValue = (string) ((int) $moneyValue[$position - 1] + $addend);
+                 if ($newValue >= 10) {
+
+
+127) /home/evalverde/projects/Price/Src/Domain/Rounder.php:25    [M] GreaterThan
+
+--- Original
++++ New
+@@ @@
+         if ($shouldRound && $moneyValue[$valueLength - $havingDigits + $targetDigits] >= 5) {
+             $position = $valueLength - $havingDigits + $targetDigits;
+             $addend = 1;
+-            while ($position > 0) {
++            while ($position >= 0) {
+                 $newValue = (string) ((int) $moneyValue[$position - 1] + $addend);
+                 if ($newValue >= 10) {
+                     $moneyValue[$position - 1] = $newValue[1];
+
+
+128) /home/evalverde/projects/Price/Src/Domain/Rounder.php:25    [M] GreaterThanNegotiation
+
+--- Original
++++ New
+@@ @@
+         if ($shouldRound && $moneyValue[$valueLength - $havingDigits + $targetDigits] >= 5) {
+             $position = $valueLength - $havingDigits + $targetDigits;
+             $addend = 1;
+-            while ($position > 0) {
++            while ($position <= 0) {
+                 $newValue = (string) ((int) $moneyValue[$position - 1] + $addend);
+                 if ($newValue >= 10) {
+                     $moneyValue[$position - 1] = $newValue[1];
+
+
+129) /home/evalverde/projects/Price/Src/Domain/Rounder.php:26    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+             $position = $valueLength - $havingDigits + $targetDigits;
+             $addend = 1;
+             while ($position > 0) {
+-                $newValue = (string) ((int) $moneyValue[$position - 1] + $addend);
++                $newValue = (string) ((int) $moneyValue[$position - 2] + $addend);
+                 if ($newValue >= 10) {
+                     $moneyValue[$position - 1] = $newValue[1];
+                     $addend = $newValue[0];
+
+
+130) /home/evalverde/projects/Price/Src/Domain/Rounder.php:26    [M] OneZeroInteger
+
+--- Original
++++ New
+@@ @@
+             $position = $valueLength - $havingDigits + $targetDigits;
+             $addend = 1;
+             while ($position > 0) {
+-                $newValue = (string) ((int) $moneyValue[$position - 1] + $addend);
++                $newValue = (string) ((int) $moneyValue[$position - 0] + $addend);
+                 if ($newValue >= 10) {
+                     $moneyValue[$position - 1] = $newValue[1];
+                     $addend = $newValue[0];
+
+
+131) /home/evalverde/projects/Price/Src/Domain/Rounder.php:26    [M] Minus
+
+--- Original
++++ New
+@@ @@
+             $position = $valueLength - $havingDigits + $targetDigits;
+             $addend = 1;
+             while ($position > 0) {
+-                $newValue = (string) ((int) $moneyValue[$position - 1] + $addend);
++                $newValue = (string) ((int) $moneyValue[$position + 1] + $addend);
+                 if ($newValue >= 10) {
+                     $moneyValue[$position - 1] = $newValue[1];
+                     $addend = $newValue[0];
+
+
+132) /home/evalverde/projects/Price/Src/Domain/Rounder.php:26    [M] CastInt
+
+--- Original
++++ New
+@@ @@
+             $position = $valueLength - $havingDigits + $targetDigits;
+             $addend = 1;
+             while ($position > 0) {
+-                $newValue = (string) ((int) $moneyValue[$position - 1] + $addend);
++                $newValue = (string) ($moneyValue[$position - 1] + $addend);
+                 if ($newValue >= 10) {
+                     $moneyValue[$position - 1] = $newValue[1];
+                     $addend = $newValue[0];
+
+
+133) /home/evalverde/projects/Price/Src/Domain/Rounder.php:26    [M] CastString
+
+--- Original
++++ New
+@@ @@
+             $position = $valueLength - $havingDigits + $targetDigits;
+             $addend = 1;
+             while ($position > 0) {
+-                $newValue = (string) ((int) $moneyValue[$position - 1] + $addend);
++                $newValue = (int) $moneyValue[$position - 1] + $addend;
+                 if ($newValue >= 10) {
+                     $moneyValue[$position - 1] = $newValue[1];
+                     $addend = $newValue[0];
+
+
+134) /home/evalverde/projects/Price/Src/Domain/Rounder.php:26    [M] Plus
+
+--- Original
++++ New
+@@ @@
+             $position = $valueLength - $havingDigits + $targetDigits;
+             $addend = 1;
+             while ($position > 0) {
+-                $newValue = (string) ((int) $moneyValue[$position - 1] + $addend);
++                $newValue = (string) ((int) $moneyValue[$position - 1] - $addend);
+                 if ($newValue >= 10) {
+                     $moneyValue[$position - 1] = $newValue[1];
+                     $addend = $newValue[0];
+
+
+135) /home/evalverde/projects/Price/Src/Domain/Rounder.php:28    [M] GreaterThanOrEqualToNegotiation
+
+--- Original
++++ New
+@@ @@
+             $addend = 1;
+             while ($position > 0) {
+                 $newValue = (string) ((int) $moneyValue[$position - 1] + $addend);
+-                if ($newValue >= 10) {
++                if ($newValue < 10) {
+                     $moneyValue[$position - 1] = $newValue[1];
+                     $addend = $newValue[0];
+                     --$position;
+
+
+136) /home/evalverde/projects/Price/Src/Domain/Rounder.php:28    [M] GreaterThanOrEqualTo
+
+--- Original
++++ New
+@@ @@
+             $addend = 1;
+             while ($position > 0) {
+                 $newValue = (string) ((int) $moneyValue[$position - 1] + $addend);
+-                if ($newValue >= 10) {
++                if ($newValue > 10) {
+                     $moneyValue[$position - 1] = $newValue[1];
+                     $addend = $newValue[0];
+                     --$position;
+
+
+137) /home/evalverde/projects/Price/Src/Domain/Rounder.php:29    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+             while ($position > 0) {
+                 $newValue = (string) ((int) $moneyValue[$position - 1] + $addend);
+                 if ($newValue >= 10) {
+-                    $moneyValue[$position - 1] = $newValue[1];
++                    $moneyValue[$position - 2] = $newValue[1];
+                     $addend = $newValue[0];
+                     --$position;
+                     if (0 === $position) {
+
+
+138) /home/evalverde/projects/Price/Src/Domain/Rounder.php:29    [M] OneZeroInteger
+
+--- Original
++++ New
+@@ @@
+             while ($position > 0) {
+                 $newValue = (string) ((int) $moneyValue[$position - 1] + $addend);
+                 if ($newValue >= 10) {
+-                    $moneyValue[$position - 1] = $newValue[1];
++                    $moneyValue[$position - 0] = $newValue[1];
+                     $addend = $newValue[0];
+                     --$position;
+                     if (0 === $position) {
+
+
+139) /home/evalverde/projects/Price/Src/Domain/Rounder.php:29    [M] Minus
+
+--- Original
++++ New
+@@ @@
+             while ($position > 0) {
+                 $newValue = (string) ((int) $moneyValue[$position - 1] + $addend);
+                 if ($newValue >= 10) {
+-                    $moneyValue[$position - 1] = $newValue[1];
++                    $moneyValue[$position + 1] = $newValue[1];
+                     $addend = $newValue[0];
+                     --$position;
+                     if (0 === $position) {
+
+
+140) /home/evalverde/projects/Price/Src/Domain/Rounder.php:29    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+             while ($position > 0) {
+                 $newValue = (string) ((int) $moneyValue[$position - 1] + $addend);
+                 if ($newValue >= 10) {
+-                    $moneyValue[$position - 1] = $newValue[1];
++                    $moneyValue[$position - 1] = $newValue[2];
+                     $addend = $newValue[0];
+                     --$position;
+                     if (0 === $position) {
+
+
+141) /home/evalverde/projects/Price/Src/Domain/Rounder.php:29    [M] OneZeroInteger
+
+--- Original
++++ New
+@@ @@
+             while ($position > 0) {
+                 $newValue = (string) ((int) $moneyValue[$position - 1] + $addend);
+                 if ($newValue >= 10) {
+-                    $moneyValue[$position - 1] = $newValue[1];
++                    $moneyValue[$position - 1] = $newValue[0];
+                     $addend = $newValue[0];
+                     --$position;
+                     if (0 === $position) {
+
+
+142) /home/evalverde/projects/Price/Src/Domain/Rounder.php:30    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+                 $newValue = (string) ((int) $moneyValue[$position - 1] + $addend);
+                 if ($newValue >= 10) {
+                     $moneyValue[$position - 1] = $newValue[1];
+-                    $addend = $newValue[0];
++                    $addend = $newValue[-1];
+                     --$position;
+                     if (0 === $position) {
+                         $moneyValue = $addend . $moneyValue;
+
+
+143) /home/evalverde/projects/Price/Src/Domain/Rounder.php:30    [M] OneZeroInteger
+
+--- Original
++++ New
+@@ @@
+                 $newValue = (string) ((int) $moneyValue[$position - 1] + $addend);
+                 if ($newValue >= 10) {
+                     $moneyValue[$position - 1] = $newValue[1];
+-                    $addend = $newValue[0];
++                    $addend = $newValue[1];
+                     --$position;
+                     if (0 === $position) {
+                         $moneyValue = $addend . $moneyValue;
+
+
+144) /home/evalverde/projects/Price/Src/Domain/Rounder.php:31    [M] Decrement
+
+--- Original
++++ New
+@@ @@
+                 if ($newValue >= 10) {
+                     $moneyValue[$position - 1] = $newValue[1];
+                     $addend = $newValue[0];
+-                    --$position;
++                    ++$position;
+                     if (0 === $position) {
+                         $moneyValue = $addend . $moneyValue;
+                     }
+
+
+145) /home/evalverde/projects/Price/Src/Domain/Rounder.php:32    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+                     $moneyValue[$position - 1] = $newValue[1];
+                     $addend = $newValue[0];
+                     --$position;
+-                    if (0 === $position) {
++                    if (-1 === $position) {
+                         $moneyValue = $addend . $moneyValue;
+                     }
+                 } else {
+
+
+146) /home/evalverde/projects/Price/Src/Domain/Rounder.php:32    [M] OneZeroInteger
+
+--- Original
++++ New
+@@ @@
+                     $moneyValue[$position - 1] = $newValue[1];
+                     $addend = $newValue[0];
+                     --$position;
+-                    if (0 === $position) {
++                    if (1 === $position) {
+                         $moneyValue = $addend . $moneyValue;
+                     }
+                 } else {
+
+
+147) /home/evalverde/projects/Price/Src/Domain/Rounder.php:32    [M] Identical
+
+--- Original
++++ New
+@@ @@
+                     $moneyValue[$position - 1] = $newValue[1];
+                     $addend = $newValue[0];
+                     --$position;
+-                    if (0 === $position) {
++                    if (0 !== $position) {
+                         $moneyValue = $addend . $moneyValue;
+                     }
+                 } else {
+
+
+148) /home/evalverde/projects/Price/Src/Domain/Rounder.php:36    [M] Identical
+
+--- Original
++++ New
+@@ @@
+                         $moneyValue = $addend . $moneyValue;
+                     }
+                 } else {
+-                    if ('-' === $moneyValue[$position - 1]) {
++                    if ('-' !== $moneyValue[$position - 1]) {
+                         $moneyValue[$position - 1] = $newValue[0];
+                         $moneyValue = '-' . $moneyValue;
+                     } else {
+
+
+149) /home/evalverde/projects/Price/Src/Domain/Rounder.php:36    [M] Minus
+
+--- Original
++++ New
+@@ @@
+                         $moneyValue = $addend . $moneyValue;
+                     }
+                 } else {
+-                    if ('-' === $moneyValue[$position - 1]) {
++                    if ('-' === $moneyValue[$position + 1]) {
+                         $moneyValue[$position - 1] = $newValue[0];
+                         $moneyValue = '-' . $moneyValue;
+                     } else {
+
+
+150) /home/evalverde/projects/Price/Src/Domain/Rounder.php:36    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+                         $moneyValue = $addend . $moneyValue;
+                     }
+                 } else {
+-                    if ('-' === $moneyValue[$position - 1]) {
++                    if ('-' === $moneyValue[$position - 2]) {
+                         $moneyValue[$position - 1] = $newValue[0];
+                         $moneyValue = '-' . $moneyValue;
+                     } else {
+
+
+151) /home/evalverde/projects/Price/Src/Domain/Rounder.php:36    [M] OneZeroInteger
+
+--- Original
++++ New
+@@ @@
+                         $moneyValue = $addend . $moneyValue;
+                     }
+                 } else {
+-                    if ('-' === $moneyValue[$position - 1]) {
++                    if ('-' === $moneyValue[$position - 0]) {
+                         $moneyValue[$position - 1] = $newValue[0];
+                         $moneyValue = '-' . $moneyValue;
+                     } else {
+
+
+152) /home/evalverde/projects/Price/Src/Domain/Rounder.php:37    [M] OneZeroInteger
+
+--- Original
++++ New
+@@ @@
+                     }
+                 } else {
+                     if ('-' === $moneyValue[$position - 1]) {
+-                        $moneyValue[$position - 1] = $newValue[0];
++                        $moneyValue[$position - 1] = $newValue[1];
+                         $moneyValue = '-' . $moneyValue;
+                     } else {
+                         $moneyValue[$position - 1] = $newValue[0];
+
+
+153) /home/evalverde/projects/Price/Src/Domain/Rounder.php:37    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+                     }
+                 } else {
+                     if ('-' === $moneyValue[$position - 1]) {
+-                        $moneyValue[$position - 1] = $newValue[0];
++                        $moneyValue[$position - 1] = $newValue[-1];
+                         $moneyValue = '-' . $moneyValue;
+                     } else {
+                         $moneyValue[$position - 1] = $newValue[0];
+
+
+154) /home/evalverde/projects/Price/Src/Domain/Rounder.php:37    [M] Minus
+
+--- Original
++++ New
+@@ @@
+                     }
+                 } else {
+                     if ('-' === $moneyValue[$position - 1]) {
+-                        $moneyValue[$position - 1] = $newValue[0];
++                        $moneyValue[$position + 1] = $newValue[0];
+                         $moneyValue = '-' . $moneyValue;
+                     } else {
+                         $moneyValue[$position - 1] = $newValue[0];
+
+
+155) /home/evalverde/projects/Price/Src/Domain/Rounder.php:37    [M] OneZeroInteger
+
+--- Original
++++ New
+@@ @@
+                     }
+                 } else {
+                     if ('-' === $moneyValue[$position - 1]) {
+-                        $moneyValue[$position - 1] = $newValue[0];
++                        $moneyValue[$position - 0] = $newValue[0];
+                         $moneyValue = '-' . $moneyValue;
+                     } else {
+                         $moneyValue[$position - 1] = $newValue[0];
+
+
+156) /home/evalverde/projects/Price/Src/Domain/Rounder.php:37    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+                     }
+                 } else {
+                     if ('-' === $moneyValue[$position - 1]) {
+-                        $moneyValue[$position - 1] = $newValue[0];
++                        $moneyValue[$position - 2] = $newValue[0];
+                         $moneyValue = '-' . $moneyValue;
+                     } else {
+                         $moneyValue[$position - 1] = $newValue[0];
+
+
+157) /home/evalverde/projects/Price/Src/Domain/Rounder.php:40    [M] OneZeroInteger
+
+--- Original
++++ New
+@@ @@
+                         $moneyValue[$position - 1] = $newValue[0];
+                         $moneyValue = '-' . $moneyValue;
+                     } else {
+-                        $moneyValue[$position - 1] = $newValue[0];
++                        $moneyValue[$position - 0] = $newValue[0];
+                     }
+                     break;
+                 }
+
+
+158) /home/evalverde/projects/Price/Src/Domain/Rounder.php:40    [M] Minus
+
+--- Original
++++ New
+@@ @@
+                         $moneyValue[$position - 1] = $newValue[0];
+                         $moneyValue = '-' . $moneyValue;
+                     } else {
+-                        $moneyValue[$position - 1] = $newValue[0];
++                        $moneyValue[$position + 1] = $newValue[0];
+                     }
+                     break;
+                 }
+
+
+159) /home/evalverde/projects/Price/Src/Domain/Rounder.php:40    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+                         $moneyValue[$position - 1] = $newValue[0];
+                         $moneyValue = '-' . $moneyValue;
+                     } else {
+-                        $moneyValue[$position - 1] = $newValue[0];
++                        $moneyValue[$position - 1] = $newValue[-1];
+                     }
+                     break;
+                 }
+
+
+160) /home/evalverde/projects/Price/Src/Domain/Rounder.php:40    [M] OneZeroInteger
+
+--- Original
++++ New
+@@ @@
+                         $moneyValue[$position - 1] = $newValue[0];
+                         $moneyValue = '-' . $moneyValue;
+                     } else {
+-                        $moneyValue[$position - 1] = $newValue[0];
++                        $moneyValue[$position - 1] = $newValue[1];
+                     }
+                     break;
+                 }
+
+
+161) /home/evalverde/projects/Price/Src/Domain/Rounder.php:40    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+                         $moneyValue[$position - 1] = $newValue[0];
+                         $moneyValue = '-' . $moneyValue;
+                     } else {
+-                        $moneyValue[$position - 1] = $newValue[0];
++                        $moneyValue[$position - 2] = $newValue[0];
+                     }
+                     break;
+                 }
+
+
+162) /home/evalverde/projects/Price/Src/Domain/Rounder.php:43    [M] Break_
+
+--- Original
++++ New
+@@ @@
+                     } else {
+                         $moneyValue[$position - 1] = $newValue[0];
+                     }
+-                    break;
++                    continue;
+                 }
+             }
+         }
+
+
+163) /home/evalverde/projects/Price/Src/Domain/StringPrice.php:15    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+     private $price;
+     private function __construct(string $price)
+     {
+-        $this->setPrice($price);
++        
+     }
+     private function setPrice(string $price) : void
+     {

@@ -13,6 +13,7 @@ final class Number
     private const NEGATIVE_SIGN = '-';
     private const NUMERIC_SEPARATOR = '.';
     private const DEFAULT_POSITIVE_NUMERIC_VALUE = '0';
+    private const FIRST_CHART = '0';
 
     private $numbers = [0 => 1, 1 => 1, 2 => 1, 3 => 1, 4 => 1, 5 => 1, 6 => 1, 7 => 1, 8 => 1, 9 => 1];
 
@@ -24,7 +25,7 @@ final class Number
         $this->fractionalPart = $this->parseFractionalPart((string) $fractionalPart);
     }
 
-    public static function fromString($number): self
+    public static function fromString(string $number): self
     {
         $decimalSeparatorPosition = strpos($number, self::NUMERIC_SEPARATOR);
         if (false === $decimalSeparatorPosition) {
@@ -33,7 +34,7 @@ final class Number
 
         return new self(
             substr($number, 0, $decimalSeparatorPosition),
-            rtrim(substr($number, $decimalSeparatorPosition + 1), '0')
+            rtrim(substr($number, $decimalSeparatorPosition + 1), self::FIRST_CHART)
         );
     }
 
@@ -198,7 +199,8 @@ final class Number
 
     public function equal(self $number): bool
     {
-        return $this->integerPart === $number->getIntegerPart() && $this->fractionalPart;
+        return $this->integerPart === $number->getIntegerPart() &&
+            $this->fractionalPart === $number->getFractionalPart();
     }
 
     private function preconditionNotNullArguments(string $integerPart, string $fractionalPart)

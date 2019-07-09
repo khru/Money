@@ -1,6 +1,6 @@
 <?php
 
-namespace WeDev\Price;
+namespace WeDev\Price\Domain;
 
 final class Currency implements \JsonSerializable
 {
