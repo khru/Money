@@ -8,7 +8,11 @@ use WeDev\Price\Domain\Number;
 class NumberTest extends TestCase
 {
     private const A_POSITIVE_DECIMAL_NUMBER = 1.5;
+    private const A_POSITIVE_DECIMAL_NUMBER_BIGGER_THAN_HALF = 1.56;
+    private const A_POSITIVE_DECIMAL_NUMBER_SMALLER_THAN_HALF = 1.49;
     private const A_NEGATIVE_DECIMAL_NUMBER = -1.5;
+    private const A_NEGATIVE_DECIMAL_NUMBER_BIGGER_THAN_HALF = -1.56;
+    private const A_NEGATIVE_DECIMAL_NUMBER_SMALLER_THAN_HALF = -1.49;
     private const AN_OTHER_POSITIVE_DECIMAL_NUMBER = 0.5;
     private const AN_OTHER_NEGATIVE_DECIMAL_NUMBER = -0.5;
     private const A_POSITIVE_DECIMAL_NUMBER_TAILING_ZEROS = 1.500000;
@@ -18,7 +22,11 @@ class NumberTest extends TestCase
     private const A_POSITIVE_INTEGER = 1;
     private const A_NEGATIVE_INTEGER = -1;
     private const A_POSITIVE_DECIMAL_NUMBER_STRING = '1.5';
+    private const A_POSITIVE_DECIMAL_NUMBER_BIGGER_THAN_HALF_STRING = '1.56';
+    private const A_POSITIVE_DECIMAL_NUMBER_SMALLER_THAN_HALF_STRING = '1.49';
     private const A_NEGATIVE_DECIMAL_NUMBER_STRING = '-1.5';
+    private const A_NEGATIVE_DECIMAL_NUMBER_BIGGER_THAN_HALF_STRING = '-1.56';
+    private const A_NEGATIVE_DECIMAL_NUMBER_SMALLER_THAN_HALF_STRING = '-1.49';
     private const AN_OTHER_POSITIVE_DECIMAL_NUMBER_STRING = '0.5';
     private const AN_OTHER_NEGATIVE_DECIMAL_NUMBER_STRING = '-0.5';
     private const A_POSITIVE_INTEGER_STRING = '1';
@@ -341,10 +349,20 @@ class NumberTest extends TestCase
     /**
      * @test
      */
-    public function shouldBeEqualsComaringTwoEqualFloatsWithStringConstructor()
+    public function shouldBeEqualsComparingTwoEqualFloatsWithStringConstructor()
     {
         $number_a = Number::fromString(self::A_POSITIVE_DECIMAL_NUMBER_STRING);
         $number_b = Number::fromString(self::A_POSITIVE_DECIMAL_NUMBER_STRING);
+        $this->assertTrue($number_a->equal($number_b));
+    }
+
+    /**
+     * @test
+     */
+    public function xxx()
+    {
+        $number_a = Number::fromNumber(self::A_POSITIVE_DECIMAL_NUMBER_TAILING_ZEROS_STRING);
+        $number_b = Number::fromNumber(self::A_POSITIVE_DECIMAL_NUMBER_STRING);
         $this->assertTrue($number_a->equal($number_b));
     }
 }
