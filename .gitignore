@@ -6,3 +6,5 @@ vendor
 Makefile
 .idea/
 build/
+infection.log
+infection.json.dist

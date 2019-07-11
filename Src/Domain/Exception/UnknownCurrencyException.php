@@ -1,7 +1,7 @@
 <?php
 
-namespace Money\Exception;
+namespace WeDev\Price\Domain\Exception;
 
-final class UnknownCurrencyException extends \DomainException
+final class UnknownCurrencyException extends \Exception
 {
 }

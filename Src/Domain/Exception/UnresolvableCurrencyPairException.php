@@ -1,12 +1,11 @@
 <?php
 
-namespace Money\Exception;
+namespace WeDev\Price\Domain\Exception;
 
-use WeDev\Price\Currency;
+use WeDev\Price\Domain\Currency;
 
 final class UnresolvableCurrencyPairException extends \InvalidArgumentException
 {
-
     public static function createFromCurrencies(Currency $baseCurrency, Currency $counterCurrency): self
     {
         $message = sprintf(

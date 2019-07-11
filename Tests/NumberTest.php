@@ -43,7 +43,7 @@ class NumberTest extends TestCase
     /**
      * @test
      */
-    public function TypeErrorForNamedConstructorFloat()
+    public function typeErrorForNamedConstructorFloat()
     {
         $this->expectException(\TypeError::class);
         Number::fromFloat(null);
@@ -52,7 +52,7 @@ class NumberTest extends TestCase
     /**
      * @test
      */
-    public function TypeErrorForNamedConstructorString()
+    public function typeErrorForNamedConstructorString()
     {
         $this->expectException(\TypeError::class);
         Number::fromString(null);
@@ -61,7 +61,7 @@ class NumberTest extends TestCase
     /**
      * @test
      */
-    public function TypeErrorForNamedConstructorNumber()
+    public function typeErrorForNamedConstructorNumber()
     {
         $this->expectException(\InvalidArgumentException::class);
         Number::fromNumber(null);
@@ -88,7 +88,7 @@ class NumberTest extends TestCase
     /**
      * @test
      */
-    public function shouldThrowInvalidArgumentExceptionOnFromBadFormatedNumberString()
+    public function shouldThrowInvalidArgumentExceptionOnFromBadFormattedNumberString()
     {
         $this->expectException(\InvalidArgumentException::class);
         Number::fromString(self::A_BAD_FORMATTED_NUMBER_ARRAY);
@@ -97,7 +97,7 @@ class NumberTest extends TestCase
     /**
      * @test
      */
-    public function xxx()
+    public function shouldNotCreateANumberFromAStringWithTwoPoints()
     {
         $this->expectException(\InvalidArgumentException::class);
         Number::fromString(self::AN_OTHER_BAD_FORMATTED_NUMBER_WITH_TWO_POINTS_STRING);
@@ -106,10 +106,19 @@ class NumberTest extends TestCase
     /**
      * @test
      */
-    public function xxx1()
+    public function shouldNotCreateANumberFromAStringWithPointAndComma()
     {
         $this->expectException(\InvalidArgumentException::class);
-        Number::fromString('1.56543,1');
+        Number::fromString(self::OTHER_BAD_FORMATTED_NUMBER_STRING);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldNotCreateANumberFromAStringWithTwoCommas()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        Number::fromString(self::OTHER_BAD_FORMATTED_NUMBER_WITH_TWO_COMMAS_STRING);
     }
 
     //**************************

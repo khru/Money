@@ -17,7 +17,7 @@ final class Number
     private const DEFAULT_POSITIVE_NUMERIC_VALUE = '0';
     private const FIRST_CHART = '0';
 
-    private $numbers = [0 => 1, 1 => 1, 2 => 1, 3 => 1, 4 => 1, 5 => 1, 6 => 1, 7 => 1, 8 => 1, 9 => 1];
+    private const VALID_NUMBERS = [0 => 1, 1 => 1, 2 => 1, 3 => 1, 4 => 1, 5 => 1, 6 => 1, 7 => 1, 8 => 1, 9 => 1];
 
     private function __construct(string $integerPart, string $fractionalPart = '')
     {
@@ -61,7 +61,7 @@ final class Number
         }
 
         if (is_int($number)) {
-            return new self($number);
+            return new self((string) $number);
         }
 
         if (is_string($number)) {
@@ -118,9 +118,9 @@ final class Number
 
     public function toFloat(): float
     {
-        return (float) (self::EMPTY_STRING !== $this->fractionalPart) ?
-            $this->integerPart . $this->fractionalPart :
-            $this->integerPart;
+        return  (self::EMPTY_STRING !== $this->fractionalPart) ?
+            (float) ($this->integerPart . self::NUMERIC_SEPARATOR . $this->fractionalPart) :
+            (float) $this->integerPart;
     }
 
     public function isNegative(): bool
@@ -150,7 +150,7 @@ final class Number
         for ($position = 0; $position < $characters; ++$position) {
             $digit = $number[$position];
 
-            if (!isset($this->numbers[$digit]) && !(0 === $position && self::NEGATIVE_SIGN === $digit)) {
+            if (!isset(self::VALID_NUMBERS[$digit]) && !(0 === $position && self::NEGATIVE_SIGN === $digit)) {
                 throw new \InvalidArgumentException(
                     sprintf('Invalid integer part %1$s. Invalid digit %2$s found', $number, $digit)
                 );
@@ -189,7 +189,7 @@ final class Number
 
         for ($position = 0, $characters = strlen($number); $position < $characters; ++$position) {
             $digit = $number[$position];
-            if (!isset($this->numbers[$digit])) {
+            if (!isset(self::VALID_NUMBERS[$digit])) {
                 throw new \InvalidArgumentException(
                     sprintf('Invalid fractional part %1$s. Invalid digit %2$s found', $number, $digit)
                 );
