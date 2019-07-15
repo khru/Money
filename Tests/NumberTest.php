@@ -22,27 +22,26 @@ class NumberTest extends TestCase
     private const A_POSITIVE_INTEGER = 1;
     private const A_NEGATIVE_INTEGER = -1;
     private const A_POSITIVE_DECIMAL_NUMBER_STRING = '1.5';
-    private const A_POSITIVE_DECIMAL_NUMBER_BIGGER_THAN_HALF_STRING = '1.56';
-    private const A_POSITIVE_DECIMAL_NUMBER_SMALLER_THAN_HALF_STRING = '1.49';
     private const A_NEGATIVE_DECIMAL_NUMBER_STRING = '-1.5';
-    private const A_NEGATIVE_DECIMAL_NUMBER_BIGGER_THAN_HALF_STRING = '-1.56';
-    private const A_NEGATIVE_DECIMAL_NUMBER_SMALLER_THAN_HALF_STRING = '-1.49';
     private const AN_OTHER_POSITIVE_DECIMAL_NUMBER_STRING = '0.5';
     private const AN_OTHER_NEGATIVE_DECIMAL_NUMBER_STRING = '-0.5';
     private const A_POSITIVE_INTEGER_STRING = '1';
     private const A_NEGATIVE_INTEGER_STRING = '-1';
     private const A_POSITIVE_DECIMAL_NUMBER_TAILING_ZEROS_STRING = '1.500000';
     private const A_NEGATIVE_DECIMAL_NUMBER_TAILING_ZEROS_STRING = '-1.500000';
-    private const AN_OTHER_POSITIVE_DECIMAL_NUMBER_TAILING_ZEROS_STRING = '0.50000';
-    private const AN_OTHER_NEGATIVE_DECIMAL_NUMBER_TAILING_ZEROS_STRING = '-0.50000';
     private const EMPTY_STRING = '';
     private const EMPTY_STRING_WITH_SPACES = '          ';
     private const A_BAD_FORMATTED_NUMBER_ARRAY = '1,56543.1';
     private const AN_OTHER_BAD_FORMATTED_NUMBER_WITH_TWO_POINTS_STRING = '1.56543.1';
     private const OTHER_BAD_FORMATTED_NUMBER_STRING = '1.56543,1';
     private const OTHER_BAD_FORMATTED_NUMBER_WITH_TWO_COMMAS_STRING = '1,56543,1';
-
     private const EMPTY_ARRAY = [];
+    private const AN_OTHER_NEGATIVE_DECIMAL_NUMBER_TAILING_ZEROS_STRING = '-0.50000';
+    private const AN_OTHER_POSITIVE_DECIMAL_NUMBER_TAILING_ZEROS_STRING = '0.50000';
+    private const A_NEGATIVE_DECIMAL_NUMBER_SMALLER_THAN_HALF_STRING = '-1.49';
+    private const A_NEGATIVE_DECIMAL_NUMBER_BIGGER_THAN_HALF_STRING = '-1.56';
+    private const A_POSITIVE_DECIMAL_NUMBER_SMALLER_THAN_HALF_STRING = '1.49';
+    private const A_POSITIVE_DECIMAL_NUMBER_BIGGER_THAN_HALF_STRING = '1.56';
 
     //**************************
     // Number preconditions
@@ -359,10 +358,142 @@ class NumberTest extends TestCase
     /**
      * @test
      */
-    public function xxx()
+    public function shouldBeEqualTwoNumbersWithTailingZeros()
     {
         $number_a = Number::fromNumber(self::A_POSITIVE_DECIMAL_NUMBER_TAILING_ZEROS_STRING);
         $number_b = Number::fromNumber(self::A_POSITIVE_DECIMAL_NUMBER_STRING);
         $this->assertTrue($number_a->equal($number_b));
+    }
+
+    /**
+     * @test
+     */
+    public function shouldBeEqualTwoNegativeNumbersUnderOneWithTailingZeros()
+    {
+        $number_a = Number::fromNumber(self::A_NEGATIVE_DECIMAL_NUMBER_TAILING_ZEROS);
+        $number_b = Number::fromNumber(self::A_NEGATIVE_DECIMAL_NUMBER);
+        $this->assertTrue($number_a->equal($number_b));
+    }
+
+    /**
+     * @test
+     */
+    public function shouldBeEqualTwoNegativeNumbersUnderOneWithTailingZerosString()
+    {
+        $number_a = Number::fromNumber(self::AN_OTHER_NEGATIVE_DECIMAL_NUMBER_TAILING_ZEROS_STRING);
+        $number_b = Number::fromNumber(self::AN_OTHER_NEGATIVE_DECIMAL_NUMBER);
+        $this->assertTrue($number_a->equal($number_b));
+    }
+
+    /**
+     * @test
+     */
+    public function shouldBeEqualTwoPositiveNumbersUnderOneWithTailingZerosString()
+    {
+        $number_a = Number::fromNumber(self::AN_OTHER_POSITIVE_DECIMAL_NUMBER_TAILING_ZEROS_STRING);
+        $number_b = Number::fromNumber(self::AN_OTHER_POSITIVE_DECIMAL_NUMBER);
+        $this->assertTrue($number_a->equal($number_b));
+    }
+
+    /**
+     * @test
+     */
+    public function shouldBeEqualTwoPositiveNumbersUnderOneWithTailingZeros()
+    {
+        $number_a = Number::fromNumber(self::AN_OTHER_POSITIVE_DECIMAL_NUMBER_TAILING_ZEROS);
+        $number_b = Number::fromNumber(self::AN_OTHER_POSITIVE_DECIMAL_NUMBER);
+        $this->assertTrue($number_a->equal($number_b));
+    }
+
+    /**
+     * @test
+     */
+    public function shouldBeEqualTwoNegativeNumbersWithTailingZeros()
+    {
+        $number_a = Number::fromNumber(self::A_NEGATIVE_DECIMAL_NUMBER_TAILING_ZEROS_STRING);
+        $number_b = Number::fromNumber(self::A_NEGATIVE_DECIMAL_NUMBER_STRING);
+        $this->assertTrue($number_a->equal($number_b));
+    }
+
+    /**
+     * @test
+     */
+    public function shouldBeEqualTwoNegativeDecimalNumbersWithTailingZeros()
+    {
+        $number_a = Number::fromNumber(self::AN_OTHER_NEGATIVE_DECIMAL_NUMBER_TAILING_ZEROS);
+        $number_b = Number::fromNumber(self::AN_OTHER_NEGATIVE_DECIMAL_NUMBER_STRING);
+        $this->assertTrue($number_a->equal($number_b));
+    }
+
+    /**
+     * @test
+     */
+    public function shouldNotBehalfByPositiveDecimalNumberBiggerThanHalf()
+    {
+        $number_a = Number::fromNumber(self::A_POSITIVE_DECIMAL_NUMBER_BIGGER_THAN_HALF);
+        $this->assertFalse($number_a->isHalf());
+    }
+
+    /**
+     * @test
+     */
+    public function shouldNotBehalfByPositiveDecimalNumberSmallerThanHalf()
+    {
+        $number_a = Number::fromNumber(self::A_POSITIVE_DECIMAL_NUMBER_SMALLER_THAN_HALF);
+        $this->assertFalse($number_a->isHalf());
+    }
+
+    /**
+     * @test
+     */
+    public function shouldNotBehalfByNegativeDecimalNumberSmallerThanHalf()
+    {
+        $number_a = Number::fromNumber(self::A_NEGATIVE_DECIMAL_NUMBER_SMALLER_THAN_HALF);
+        $this->assertFalse($number_a->isHalf());
+    }
+
+    /**
+     * @test
+     */
+    public function shouldNotBehalfByNegativeDecimalNumberBiggerThanHalf()
+    {
+        $number_a = Number::fromNumber(self::A_NEGATIVE_DECIMAL_NUMBER_BIGGER_THAN_HALF);
+        $this->assertFalse($number_a->isHalf());
+    }
+
+    /**
+     * @test
+     */
+    public function shouldNotBehalfByPositiveDecimalNumberBiggerThanHalfString()
+    {
+        $number_a = Number::fromNumber(self::A_POSITIVE_DECIMAL_NUMBER_BIGGER_THAN_HALF_STRING);
+        $this->assertFalse($number_a->isHalf());
+    }
+
+    /**
+     * @test
+     */
+    public function shouldNotBehalfByPositiveDecimalNumberSmallerThanHalfString()
+    {
+        $number_a = Number::fromNumber(self::A_POSITIVE_DECIMAL_NUMBER_SMALLER_THAN_HALF_STRING);
+        $this->assertFalse($number_a->isHalf());
+    }
+
+    /**
+     * @test
+     */
+    public function shouldNotBehalfByNegativeDecimalNumberSmallerThanHalfString()
+    {
+        $number_a = Number::fromNumber(self::A_NEGATIVE_DECIMAL_NUMBER_SMALLER_THAN_HALF_STRING);
+        $this->assertFalse($number_a->isHalf());
+    }
+
+    /**
+     * @test
+     */
+    public function shouldNotBehalfByNegativeDecimalNumberBiggerThanHalfString()
+    {
+        $number_a = Number::fromNumber(self::A_NEGATIVE_DECIMAL_NUMBER_BIGGER_THAN_HALF_STRING);
+        $this->assertFalse($number_a->isHalf());
     }
 }
