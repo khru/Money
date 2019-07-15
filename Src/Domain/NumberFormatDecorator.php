@@ -18,9 +18,9 @@ class NumberFormatDecorator
      *
      * @return Number
      */
-    public function roundedNumber(float $round = 0.5): Number
+    public function roundedNumber(Number $round): Number
     {
-        $round = (float) $round;
+        $round = $round->toFloat();
         $number = $this->number->toFloat();
         $mod = fmod($number, $round);
         $result = 0.0;
@@ -31,7 +31,7 @@ class NumberFormatDecorator
             $result = ($round - $mod) + $number;
         }
 
-        if (!is_null($round) && !is_null($result) && mb_strlen($result) > mb_strlen($round)) {
+        if (!is_null($round) && !is_null($result) && strlen((string) $result) > strlen((string) $round)) {
             $result = $this->numberFormat($result, strlen(($this->number->getFractionalPart())));
         }
 
