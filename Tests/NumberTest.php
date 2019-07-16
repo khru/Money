@@ -3,6 +3,7 @@
 namespace WeDev\Price\Tests;
 
 use PHPUnit\Framework\TestCase;
+use WeDev\Price\Domain\Exception\NumberInvalidArgument;
 use WeDev\Price\Domain\Number;
 
 class NumberTest extends TestCase
@@ -52,7 +53,7 @@ class NumberTest extends TestCase
      */
     public function shouldThrowInvalidArgumentForNamedConstructorString()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(NumberInvalidArgument::class);
         Number::fromNumber(null);
     }
 
@@ -61,7 +62,7 @@ class NumberTest extends TestCase
      */
     public function typeErrorForNamedConstructorNumber()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(NumberInvalidArgument::class);
         Number::fromNumber(null);
     }
 
@@ -70,7 +71,7 @@ class NumberTest extends TestCase
      */
     public function shouldThrowInvalidArgumentExceptionOnEmptyString()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(NumberInvalidArgument::class);
         Number::fromNumber(self::EMPTY_STRING);
     }
 
@@ -79,7 +80,7 @@ class NumberTest extends TestCase
      */
     public function shouldThrowInvalidArgumentOnEmptyArray()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(NumberInvalidArgument::class);
         Number::fromNumber(self::EMPTY_ARRAY);
     }
 
@@ -88,7 +89,7 @@ class NumberTest extends TestCase
      */
     public function shouldThrowInvalidArgumentExceptionOnFromBadFormattedNumberString()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(NumberInvalidArgument::class);
         Number::fromNumber(self::A_BAD_FORMATTED_NUMBER_ARRAY);
     }
 
@@ -97,7 +98,7 @@ class NumberTest extends TestCase
      */
     public function shouldNotCreateANumberFromAStringWithTwoPoints()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(NumberInvalidArgument::class);
         Number::fromNumber(self::AN_OTHER_BAD_FORMATTED_NUMBER_WITH_TWO_POINTS_STRING);
     }
 
@@ -106,7 +107,7 @@ class NumberTest extends TestCase
      */
     public function shouldNotCreateANumberFromAStringWithPointAndComma()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(NumberInvalidArgument::class);
         Number::fromNumber(self::OTHER_BAD_FORMATTED_NUMBER_STRING);
     }
 
@@ -115,7 +116,7 @@ class NumberTest extends TestCase
      */
     public function shouldNotCreateANumberFromAStringWithTwoCommas()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(NumberInvalidArgument::class);
         Number::fromNumber(self::OTHER_BAD_FORMATTED_NUMBER_WITH_TWO_COMMAS_STRING);
     }
 
@@ -128,7 +129,7 @@ class NumberTest extends TestCase
      */
     public function shouldThrowInvalidArgumentExceptionOnEmptyStringWithSpaces()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(NumberInvalidArgument::class);
         Number::fromNumber(self::EMPTY_STRING_WITH_SPACES);
     }
 
@@ -486,5 +487,77 @@ class NumberTest extends TestCase
     {
         $number_a = Number::fromNumber(self::A_NEGATIVE_DECIMAL_NUMBER_BIGGER_THAN_HALF_STRING);
         $this->assertFalse($number_a->isHalf());
+    }
+
+    /**
+     * @test
+     */
+    public function shouldBeCloseToNextNumberFloat()
+    {
+        $number_a = Number::fromNumber(self::A_POSITIVE_DECIMAL_NUMBER_BIGGER_THAN_HALF);
+        $this->assertTrue($number_a->isCloserToNext());
+    }
+
+    /**
+     * @test
+     */
+    public function shouldNotBeCloseToNextNumberFloat()
+    {
+        $number_a = Number::fromNumber(self::A_POSITIVE_DECIMAL_NUMBER_SMALLER_THAN_HALF);
+        $this->assertFalse($number_a->isCloserToNext());
+    }
+
+    /**
+     * @test
+     */
+    public function shouldNotBeCloseToNextNegativeNumberFloat()
+    {
+        $number_a = Number::fromNumber(self::A_NEGATIVE_DECIMAL_NUMBER_SMALLER_THAN_HALF);
+        $this->assertFalse($number_a->isCloserToNext());
+    }
+
+    /**
+     * @test
+     */
+    public function shouldBeCloseToNextNegativeNumberFloat()
+    {
+        $number_a = Number::fromNumber(self::A_NEGATIVE_DECIMAL_NUMBER_BIGGER_THAN_HALF);
+        $this->assertTrue($number_a->isCloserToNext());
+    }
+
+    /**
+     * @test
+     */
+    public function shouldBeCloseToNextNumberString()
+    {
+        $number_a = Number::fromNumber(self::A_POSITIVE_DECIMAL_NUMBER_BIGGER_THAN_HALF_STRING);
+        $this->assertTrue($number_a->isCloserToNext());
+    }
+
+    /**
+     * @test
+     */
+    public function shouldNotBeCloseToNextNumberString()
+    {
+        $number_a = Number::fromNumber(self::A_POSITIVE_DECIMAL_NUMBER_SMALLER_THAN_HALF_STRING);
+        $this->assertFalse($number_a->isCloserToNext());
+    }
+
+    /**
+     * @test
+     */
+    public function shouldNotBeCloseToNextNegativeNumberString()
+    {
+        $number_a = Number::fromNumber(self::A_NEGATIVE_DECIMAL_NUMBER_SMALLER_THAN_HALF_STRING);
+        $this->assertFalse($number_a->isCloserToNext());
+    }
+
+    /**
+     * @test
+     */
+    public function shouldBeCloseToNextNegativeNumberString()
+    {
+        $number_a = Number::fromNumber(self::A_NEGATIVE_DECIMAL_NUMBER_BIGGER_THAN_HALF_STRING);
+        $this->assertTrue($number_a->isCloserToNext());
     }
 }

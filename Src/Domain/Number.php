@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace WeDev\Price\Domain;
 
+use WeDev\Price\Domain\Exception\NumberInvalidArgument;
+
 final class Number
 {
-    private $integerPart;
+    private $integer;
     private $decimals;
 
     private const EMPTY_STRING = '';
@@ -25,14 +27,14 @@ final class Number
     {
         $this->notNullArguments($integerPart, $decimals);
 
-        $this->integerPart = $this->parseIntegerPart($integerPart);
+        $this->integer = $this->parseIntegerPart($integerPart);
         $this->decimals = Decimal::fromString($decimals);
     }
 
     private static function fromString(string $number): self
     {
         if (!static::validNumber($number)) {
-            throw new \InvalidArgumentException(self::VALID_NUMBER_MSG);
+            throw new NumberInvalidArgument(self::VALID_NUMBER_MSG);
         }
 
         $decimalSeparatorPosition = strpos($number, self::NUMERIC_SEPARATOR);
@@ -65,7 +67,7 @@ final class Number
             return self::fromString($number);
         }
 
-        throw new \InvalidArgumentException(self::VALID_NUMBER_MSG);
+        throw new NumberInvalidArgument(self::VALID_NUMBER_MSG);
     }
 
     public function __invoke(): string
@@ -76,10 +78,10 @@ final class Number
     public function __toString(): string
     {
         if (self::EMPTY_STRING === $this->getDecimals()) {
-            return $this->integerPart;
+            return $this->integer;
         }
 
-        return $this->integerPart . self::NUMERIC_SEPARATOR . $this->getDecimals();
+        return $this->integer . self::NUMERIC_SEPARATOR . $this->getDecimals();
     }
 
     public function isDecimal(): bool
@@ -99,7 +101,7 @@ final class Number
 
     public function isCurrentEven(): bool
     {
-        $lastIntegerPartNumber = $this->integerPart[strlen($this->integerPart) - 1];
+        $lastIntegerPartNumber = $this->integer[strlen($this->integer) - 1];
 
         return 0 === $lastIntegerPartNumber % 2;
     }
@@ -110,24 +112,24 @@ final class Number
             return false;
         }
 
-        return $this->getDecimals()[0] >= 5;
+        return (int) $this->getDecimals()[0] >= 5;
     }
 
     public function toFloat(): float
     {
         return  (self::EMPTY_STRING !== $this->getDecimals()) ?
-            (float) ($this->integerPart . self::NUMERIC_SEPARATOR . $this->getDecimals()) :
-            (float) $this->integerPart;
+            (float) ($this->integer . self::NUMERIC_SEPARATOR . $this->getDecimals()) :
+            (float) $this->integer;
     }
 
     public function isNegative(): bool
     {
-        return self::NEGATIVE_SIGN === $this->integerPart[0];
+        return self::NEGATIVE_SIGN === $this->integer[0];
     }
 
-    public function getIntegerPart(): string
+    public function getInteger(): string
     {
-        return $this->integerPart;
+        return $this->integer;
     }
 
     public function getDecimals(): string
@@ -148,13 +150,13 @@ final class Number
             $digit = $number[$position];
 
             if (!isset(self::VALID_NUMBERS[$digit]) && !(0 === $position && self::NEGATIVE_SIGN === $digit)) {
-                throw new \InvalidArgumentException(
+                throw new NumberInvalidArgument(
                     sprintf('Invalid integer part %1$s. Invalid digit %2$s found', $number, $digit)
                 );
             }
 
             if (false === $nonZero && '0' === $digit) {
-                throw new \InvalidArgumentException(
+                throw new NumberInvalidArgument(
                     'Leading zeros are not allowed'
                 );
             }
@@ -180,7 +182,7 @@ final class Number
 
     public function equals(self $number): bool
     {
-        return $this->integerPart === $number->getIntegerPart() &&
+        return $this->integer === $number->getInteger() &&
             $this->getDecimals() === $number->getDecimals();
     }
 
@@ -198,7 +200,7 @@ final class Number
     private function notNullArguments(string $integerPart, string $fractionalPart)
     {
         if (self::EMPTY_STRING === $integerPart && self::EMPTY_STRING === $fractionalPart) {
-            throw new \InvalidArgumentException('An empty number is invalid');
+            throw new NumberInvalidArgument('An empty number is invalid');
         }
     }
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace WeDev\Price\Domain;
 
+use WeDev\Price\Domain\Exception\DecimalInvalidArgument;
+
 class Decimal implements NumericPartInterface, DecimalPartInterface
 {
     private const EMPTY_STRING = '';
@@ -23,7 +25,11 @@ class Decimal implements NumericPartInterface, DecimalPartInterface
 
     private function setDecimal(string $decimal): void
     {
-        $this->validateDecimal($decimal);
+        if (!$this->validateDecimal($decimal)) {
+            throw new DecimalInvalidArgument(
+                sprintf('Invalid decimal part %1$s. Is not numeric', $decimal)
+            );
+        }
         $this->decimal = $decimal;
     }
 
@@ -52,7 +58,6 @@ class Decimal implements NumericPartInterface, DecimalPartInterface
         if (self::EMPTY_STRING === $number) {
             return true;
         }
-
         $this->mustBeNumeric($number);
 
         return $this->validValueForADecimal($number);
@@ -61,7 +66,7 @@ class Decimal implements NumericPartInterface, DecimalPartInterface
     private function mustBeNumeric(string $number)
     {
         if (!is_numeric($number)) {
-            throw new \InvalidArgumentException(
+            throw new DecimalInvalidArgument(
                 sprintf('Invalid decimal part %1$s. Is not numeric', $number)
             );
         }
@@ -72,7 +77,9 @@ class Decimal implements NumericPartInterface, DecimalPartInterface
         try {
             $number = (string) $number;
         } catch (\Exception $e) {
-            return false;
+            throw new DecimalInvalidArgument(
+                sprintf('Invalid decimal part %1$s. Is not numeric', $number)
+            );
         }
 
         return (bool) preg_match_all(self::VALIDATOR_REGEX, $number, $matches, PREG_SET_ORDER, 0);
