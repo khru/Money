@@ -14,6 +14,7 @@ class DecimalTest extends TestCase
     private const A_WELL_FORMATTED_DECIMAL = '5151';
     private const AN_OTHER_BAD_FORMATTED_DECIMAL_3 = '51.51';
     private const AN_OTHER_BAD_FORMATTED_DECIMAL_4 = '5,1.51';
+    private const A_RANDOM_STRING = 'sdlk,jgfhjhskdhgfkjshdhgkhkjhsdkjfhsdkjh';
 
     /**
      * @test
@@ -77,5 +78,14 @@ class DecimalTest extends TestCase
     {
         $this->expectException(DecimalInvalidArgument::class);
         Decimal::fromString(self::AN_OTHER_BAD_FORMATTED_DECIMAL_3);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldNotCreatDecimalFromAString(): void
+    {
+        $this->expectException(DecimalInvalidArgument::class);
+        Decimal::fromString(self::A_RANDOM_STRING);
     }
 }
