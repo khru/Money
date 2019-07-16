@@ -26,7 +26,7 @@ final class Number
         $this->notNullArguments($integerPart, $decimals);
 
         $this->integerPart = $this->parseIntegerPart($integerPart);
-        $this->decimals = Decimal::fromString($decimals)->__toString();
+        $this->decimals = Decimal::fromString($decimals);
     }
 
     private static function fromString(string $number): self
@@ -75,11 +75,11 @@ final class Number
 
     public function __toString(): string
     {
-        if (self::EMPTY_STRING === $this->decimals) {
+        if (self::EMPTY_STRING === $this->getDecimals()) {
             return $this->integerPart;
         }
 
-        return $this->integerPart . self::NUMERIC_SEPARATOR . $this->decimals;
+        return $this->integerPart . self::NUMERIC_SEPARATOR . $this->getDecimals();
     }
 
     public function isDecimal(): bool
@@ -132,7 +132,7 @@ final class Number
 
     public function getDecimals(): string
     {
-        return $this->decimals;
+        return $this->decimals->__toString();
     }
 
     private function parseIntegerPart(string $number): string
