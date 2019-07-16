@@ -6,7 +6,7 @@ namespace WeDev\Price\Domain;
 
 interface DecimalPartInterface
 {
-    public function getDecimals(): int;
+    public function getDecimals(): string;
 
     public function equals(DecimalPartInterface $decimalPart): bool;
 }

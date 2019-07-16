@@ -8,5 +8,5 @@ interface NumericPartInterface
 {
     public function __toString(): string;
 
-    public function __invoke(): int;
+    public function __invoke(): string;
 }
