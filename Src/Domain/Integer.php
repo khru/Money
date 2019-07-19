@@ -73,7 +73,7 @@ class Integer implements IntegerInterface
         return $this->integer;
     }
 
-    public function equals (IntegerInterface $integer): bool
+    public function equals(IntegerInterface $integer): bool
     {
         return $this->getInteger() === $integer->getInteger();
     }
