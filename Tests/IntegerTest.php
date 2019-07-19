@@ -27,7 +27,7 @@ class IntegerTest extends TestCase
     private const A_BAD_FORMATTED_POSITIVE_INTEGER_WITH_LEADING_ZEROS = '+0004729';
     private const A_BAD_FORMATTED_POSITIVE_INTEGER_WITH_LEADING_ZEROS_2 = '+000573.69';
     private const A_BAD_FORMATTED_INTEGER_WITH_LEADING_ZEROS_AND_SIGN = '~0004729';
-    private const A_WELL_FORMATTED_REAL_INTEGER = 3847;
+    private const A_WELL_FORMATTED_NUMERIC_INTEGER = 3847;
     private const A_WELL_FORMATTED_STRING_INTEGER = '4762';
 
 
@@ -156,9 +156,37 @@ class IntegerTest extends TestCase
     /**
      * @test
      */
-    public function shouldNotCreateAnIntegerFromAWellFormattedRealInteger()
+    public function shouldNotCreateANumericIntegerFromAWellFormattedNumericInteger()
     {
-        $this->expectException(IntegerInvalidArgument::class);
-        Integer::fromString(self::A_WELL_FORMATTED_REAL_INTEGER);
+        $integer = Integer::fromString(self::A_WELL_FORMATTED_NUMERIC_INTEGER);
+        $this->assertFalse(self::A_WELL_FORMATTED_NUMERIC_INTEGER === $integer->getInteger());
+    }
+
+    /**
+     * @test
+     */
+    public function shouldCreateAnIntegerStringFromAWellFormattedRealInteger()
+    {
+        $integer = Integer::fromString(self::A_WELL_FORMATTED_NUMERIC_INTEGER);
+        $this->assertTrue((string) self::A_WELL_FORMATTED_NUMERIC_INTEGER === $integer->getInteger());
+    }
+
+    /**
+     * @test
+     */
+    public function shouldCreateAnIntegerFromAWellFormattedStringInteger()
+    {
+        $integer = Integer::fromString(self::A_WELL_FORMATTED_STRING_INTEGER);
+        $this->assertTrue(self::A_WELL_FORMATTED_STRING_INTEGER === $integer->getInteger());
+    }
+
+    /**
+     * @test
+     */
+    public function shouldBeEqual(): void
+    {
+        $integer = Integer::fromString(self::A_WELL_FORMATTED_STRING_INTEGER);
+        $other_Integer = Integer::fromString(self::A_WELL_FORMATTED_STRING_INTEGER);
+        $this->assertTrue($other_Integer->equals($integer));
     }
 }
