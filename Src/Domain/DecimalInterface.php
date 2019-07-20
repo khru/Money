@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace WeDev\Price\Domain;
 
-interface DecimalPartInterface
+interface DecimalInterface
 {
     public function getDecimals(): string;
 
-    public function equals(DecimalPartInterface $decimalPart): bool;
+    public function equals(DecimalInterface $decimalPart): bool;
 }

@@ -6,7 +6,7 @@ namespace WeDev\Price\Domain;
 
 use WeDev\Price\Domain\Exception\DecimalInvalidArgument;
 
-class Decimal implements NumericPartInterface, DecimalPartInterface
+class Decimal implements NumericPartInterface, DecimalInterface
 {
     private const EMPTY_STRING = '';
     private const VALIDATOR_REGEX = '/^[\d]+$/m';
@@ -43,7 +43,7 @@ class Decimal implements NumericPartInterface, DecimalPartInterface
         return $this->decimal;
     }
 
-    public function equals(DecimalPartInterface $numericPart): bool
+    public function equals(DecimalInterface $numericPart): bool
     {
         return $this->getDecimals() === $numericPart->getDecimals();
     }
