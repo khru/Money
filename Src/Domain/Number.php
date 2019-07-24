@@ -20,13 +20,11 @@ final class Number
     private const VALIDATOR_REGEX = '/^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$/m';
     private const VALID_NUMBER_MSG = 'Valid numeric value expected';
 
-    private const VALID_NUMBERS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-
     private function __construct(string $integer, string $decimals = '')
     {
         $this->notNullArguments($integer, $decimals);
 
-        $this->integer = Integer::fromString($integer)
+        $this->integer = Integer::fromString($integer);
         $this->decimals = Decimal::fromString($decimals);
     }
 
@@ -77,7 +75,7 @@ final class Number
     public function __toString(): string
     {
         if (self::EMPTY_STRING === $this->getDecimals()) {
-            return $this->integer;
+            return $this->getInteger();
         }
 
         return $this->integer . self::NUMERIC_SEPARATOR . $this->getDecimals();
@@ -128,7 +126,7 @@ final class Number
 
     public function getInteger(): string
     {
-        return $this->integer;
+        return $this->integer->__toString();
     }
 
     public function getDecimals(): string
@@ -138,7 +136,7 @@ final class Number
 
     public function equals(self $number): bool
     {
-        return $this->getInteger === $number->getInteger() &&
+        return $this->getInteger() === $number->getInteger() &&
             $this->getDecimals() === $number->getDecimals();
     }
 
