@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sikay
- * Date: 17/07/2019
- * Time: 18:33
- */
 
 namespace WeDev\Price\Tests;
 
@@ -29,12 +23,7 @@ class IntegerTest extends TestCase
     private const A_BAD_FORMATTED_INTEGER_WITH_LEADING_ZEROS_AND_SIGN = '~0004729';
     private const A_WELL_FORMATTED_NUMERIC_INTEGER = 3847;
     private const A_WELL_FORMATTED_STRING_INTEGER = '4762';
-
-
-
-    //**************************
-    // Integer
-    // *************************
+    private const A_STRING_INTEGER_ZERO = '0';
 
     /**
      * @test
@@ -93,10 +82,11 @@ class IntegerTest extends TestCase
     /**
      * @test
      */
-    public function shouldNotCreateAnIntegerFromABadFormattedIntegerWithLeadingZeros()
+    public function shouldCreateAnIntegerWithoutLeadingZeroFromABadFormattedIntegerWithLeadingZeros()
     {
-        $this->expectException(IntegerInvalidArgument::class);
-        Integer::fromString(self::A_BAD_FORMATTED_INTEGER_WITH_LEADING_ZEROS);
+        $integer = Integer::fromString(self::A_BAD_FORMATTED_INTEGER_WITH_LEADING_ZEROS);
+        $intWithoutLeadingZero = ltrim(self::A_BAD_FORMATTED_INTEGER_WITH_LEADING_ZEROS, self::A_STRING_INTEGER_ZERO);
+        $this->assertTrue((string) $intWithoutLeadingZero === $integer->getInteger());
     }
 
     /**
@@ -111,10 +101,10 @@ class IntegerTest extends TestCase
     /**
      * @test
      */
-    public function shouldNotCreateAnIntegerFromABadFormattedNegativeIntegerWithLeadingZeros()
+    public function shouldNotTheSameIntegerFromABadFormattedNegativeIntegerWithLeadingZeros()
     {
-        $this->expectException(IntegerInvalidArgument::class);
-        Integer::fromString(self::A_BAD_FORMATTED_NEGATIVE_INTEGER_WITH_LEADING_ZEROS);
+        $integer = Integer::fromString(self::A_BAD_FORMATTED_NEGATIVE_INTEGER_WITH_LEADING_ZEROS);
+        $this->assertFalse(self::A_BAD_FORMATTED_NEGATIVE_INTEGER_WITH_LEADING_ZEROS === $integer->getInteger());
     }
 
     /**
@@ -129,10 +119,10 @@ class IntegerTest extends TestCase
     /**
      * @test
      */
-    public function shouldNotCreateAnIntegerFromABadFormattedPositiveIntegerWithLeadingZeros()
+    public function shouldNotTheSameIntegerFromABadFormattedPositiveIntegerWithLeadingZeros()
     {
-        $this->expectException(IntegerInvalidArgument::class);
-        Integer::fromString(self::A_BAD_FORMATTED_POSITIVE_INTEGER_WITH_LEADING_ZEROS);
+        $integer = Integer::fromString(self::A_BAD_FORMATTED_POSITIVE_INTEGER_WITH_LEADING_ZEROS);
+        $this->assertFalse(self::A_BAD_FORMATTED_POSITIVE_INTEGER_WITH_LEADING_ZEROS === $integer->getInteger());
     }
 
     /**
@@ -188,5 +178,14 @@ class IntegerTest extends TestCase
         $integer = Integer::fromString(self::A_WELL_FORMATTED_STRING_INTEGER);
         $other_Integer = Integer::fromString(self::A_WELL_FORMATTED_STRING_INTEGER);
         $this->assertTrue($other_Integer->equals($integer));
+    }
+
+    /**
+     * @test
+     */
+    public function shouldCreateAnIntegerFromAWellFormattedStringIntegerZero(): void
+    {
+        $integer = Integer::fromString(self::A_STRING_INTEGER_ZERO);
+        $this->assertTrue(self::A_STRING_INTEGER_ZERO === $integer->getInteger());
     }
 }

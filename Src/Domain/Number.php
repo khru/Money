@@ -15,19 +15,16 @@ final class Number
     private const FLOAT_FORMAT = '%.14F';
     private const NEGATIVE_SIGN = '-';
     private const NUMERIC_SEPARATOR = '.';
-    private const DEFAULT_POSITIVE_NUMERIC_VALUE = '0';
     private const FIRST_CHART = '0';
     private const HALF_DECIMAL_VALUE = '5';
     private const VALIDATOR_REGEX = '/^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$/m';
     private const VALID_NUMBER_MSG = 'Valid numeric value expected';
 
-    private const VALID_NUMBERS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-    private function __construct(string $integerPart, string $decimals = '')
+    private function __construct(string $integer, string $decimals = '')
     {
-        $this->notNullArguments($integerPart, $decimals);
+        $this->notNullArguments($integer, $decimals);
 
-        $this->integer = $this->parseIntegerPart($integerPart);
+        $this->integer = Integer::fromString((string) $integer)->__toString();
         $this->decimals = Decimal::fromString($decimals);
     }
 
@@ -101,9 +98,9 @@ final class Number
 
     public function isCurrentEven(): bool
     {
-        $lastIntegerPartNumber = $this->integer[strlen($this->integer) - 1];
+        $lastIntegerNumber = $this->integer[strlen($this->integer) - 1];
 
-        return 0 === $lastIntegerPartNumber % 2;
+        return 0 === $lastIntegerNumber % 2;
     }
 
     public function isCloserToNext(): bool
@@ -135,49 +132,6 @@ final class Number
     public function getDecimals(): string
     {
         return $this->decimals->__toString();
-    }
-
-    private function parseIntegerPart(string $number): string
-    {
-        $default = $this->defaultValuesForIntegerValidation($number);
-        if (null !== $default) {
-            return $default;
-        }
-
-        $nonZero = false;
-        $characters = strlen($number);
-        for ($position = 0; $position < $characters; ++$position) {
-            $digit = $number[$position];
-
-            if (!isset(self::VALID_NUMBERS[$digit]) && !(0 === $position && self::NEGATIVE_SIGN === $digit)) {
-                throw new NumberInvalidArgument(
-                    sprintf('Invalid integer part %1$s. Invalid digit %2$s found', $number, $digit)
-                );
-            }
-
-            if (false === $nonZero && '0' === $digit) {
-                throw new NumberInvalidArgument(
-                    'Leading zeros are not allowed'
-                );
-            }
-
-            $nonZero = true;
-        }
-
-        return $number;
-    }
-
-    private function defaultValuesForIntegerValidation(string $number): ?string
-    {
-        if (self::EMPTY_STRING === $number || self::DEFAULT_POSITIVE_NUMERIC_VALUE === $number) {
-            return self::DEFAULT_POSITIVE_NUMERIC_VALUE;
-        }
-
-        if (self::NEGATIVE_SIGN === $number) {
-            return self::NEGATIVE_SIGN . self::DEFAULT_POSITIVE_NUMERIC_VALUE;
-        }
-
-        return null;
     }
 
     public function equals(self $number): bool

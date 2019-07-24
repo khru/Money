@@ -11,11 +11,12 @@ class Integer implements IntegerInterface
     private $integer;
 
     private const EMPTY_STRING = '';
-    private const START_WITH_ZERO_NOT_ALLOWED_MGS = 'Leading zeros are not allowed';
+    private const ZERO_STRING = '0';
     private const INVALID_INTEGER_PART_MGS = 'Invalid integer part %1$s';
     private const EMPTY_STRING_MGS = 'Integer part can not be empty';
     private const VALIDATOR_REGEX = '/^[-+]?[\d]+$/';
-    private const LEADING_ZERO_VALIDATOR_REGEX = '/^[-+]?[0]+/';
+    private const SIGN_REGEX = '/^[-+]/';
+    private const LEADING_ZERO_WITH_SIGN_VALIDATOR_REGEX = '/^[-+][0]+/';
 
     private function __construct(string $integer)
     {
@@ -30,17 +31,16 @@ class Integer implements IntegerInterface
     private function setInteger(string $integer)
     {
         $this->validateInteger($integer);
-        $this->integer = $integer;
+        $this->integer = $this->cleanLeadingZero($integer);
     }
 
     private function validateInteger(string $integer)
     {
-        if (self::EMPTY_STRING === $integer) {
+        if ($this->isIntegerEmpty($integer)) {
             throw new IntegerInvalidArgument(
                 sprintf(self::EMPTY_STRING_MGS, $integer)
             );
         }
-
         $this->validValueForAInteger($integer);
     }
 
@@ -51,11 +51,33 @@ class Integer implements IntegerInterface
                 sprintf(self::INVALID_INTEGER_PART_MGS, $integer)
             );
         }
-        if (preg_match(self::LEADING_ZERO_VALIDATOR_REGEX, $integer)) {
-            throw new IntegerInvalidArgument(
-                sprintf(self::START_WITH_ZERO_NOT_ALLOWED_MGS, $integer)
-            );
+    }
+
+    private function isIntegerEmpty($integer): bool
+    {
+        if (self::EMPTY_STRING === $integer) {
+            return true;
         }
+        return false;
+    }
+
+    private function cleanLeadingZero($integer): string
+    {
+        if (preg_match(self::LEADING_ZERO_WITH_SIGN_VALIDATOR_REGEX, $integer)) {
+            $integer = $integer[0] . ltrim(substr($integer, 1), self::ZERO_STRING);
+        } else {
+            $integer = ltrim($integer, self::ZERO_STRING);
+        }
+
+        if (preg_match(self::SIGN_REGEX, $integer) && strlen($integer) == 1) {
+            $integer = $integer[0] . self::ZERO_STRING;
+        }
+
+        if ($this->isIntegerEmpty($integer)) {
+            $integer = self::ZERO_STRING;
+        }
+
+        return $integer;
     }
 
     public function __invoke(): string
