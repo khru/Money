@@ -24,7 +24,7 @@ final class Number
     {
         $this->notNullArguments($integer, $decimals);
 
-        $this->integer = Integer::fromString((string) $integer)->__toString();
+        $this->integer = Integer::fromString($integer);
         $this->decimals = Decimal::fromString($decimals);
     }
 
@@ -75,7 +75,7 @@ final class Number
     public function __toString(): string
     {
         if (self::EMPTY_STRING === $this->getDecimals()) {
-            return $this->integer;
+            return $this->getInteger();
         }
 
         return $this->integer . self::NUMERIC_SEPARATOR . $this->getDecimals();
@@ -126,7 +126,7 @@ final class Number
 
     public function getInteger(): string
     {
-        return $this->integer;
+        return $this->integer->__toString();
     }
 
     public function getDecimals(): string
@@ -136,7 +136,7 @@ final class Number
 
     public function equals(self $number): bool
     {
-        return $this->integer === $number->getInteger() &&
+        return $this->getInteger() === $number->getInteger() &&
             $this->getDecimals() === $number->getDecimals();
     }
 
