@@ -1,0 +1,24 @@
+name: CICD
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Run composer install
+        run: composer install -n --prefer-dist
+      - name: Run yarn
+        run: yarn && yarn dev
+      - name: Run tests
+        run: ./vendor/bin/phpunit
+        env:
+          APP_ENV: testing
+      - name: Upload artifacts
+        uses: actions/upload-artifact@master
+        if: failure()
+        with:
+          name: Logs
+          path: ./storage/logs
