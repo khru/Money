@@ -32,7 +32,7 @@ class NumberFormatDecorator
         }
 
         if (!is_null($round) && !is_null($result) && mb_strlen($result) > mb_strlen($round)) {
-            $result = $this->numberFormat($result, strlen(($this->number->getFractionalPart())));
+            $result = $this->numberFormat($result, strlen(($this->number->getDecimals())));
         }
 
         return Number::fromFloat($result);
